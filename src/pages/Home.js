@@ -13,9 +13,13 @@ const Home = () => {
             <section className="home-wrapper-1 py-5">
                 <div className="container-xxl">
                     <div className="row">
-                        <div className="col-6">
-                            <div className="main-banner position-relative">
-                                <img src="images/main-banner-1.jpg" className="img-fluid rounded-3" alt="main-banner" />
+                        <div className="col-12 col-lg-12 col-xl-6 main-banner">
+                            <div className="position-relative">
+                                <img
+                                    src="images/main-banner-1.jpg"
+                                    className="img-fluid w-100 rounded-3"
+                                    alt="main-banner"
+                                />
                                 <div className="main-banner-content position-absolute">
                                     <h4>Giảm giá cho sản phẩm</h4>
                                     <h5>Áo Thun </h5>
@@ -26,7 +30,7 @@ const Home = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-6">
+                        <div className="secondary-banner col-xl-6">
                             <div className="d-flex flex-wrap gap-10 justify-content-between align-items-center">
                                 <div className="small-banner position-relative">
                                     <img
@@ -90,7 +94,7 @@ const Home = () => {
                 </div>
             </section>
             <section className="home-wrapper-2 py-5">
-                <div className="container-xxl">
+                <div className="container">
                     <div className="row">
                         <div className="col-12">
                             <div className="services d-flex align-items-center justify-content-between">
@@ -137,7 +141,7 @@ const Home = () => {
                 </div>
             </section>
             <section className="home-wrapper-2 py-5">
-                <div className="container-xxl">
+                <div className="container">
                     <div className="row">
                         <div className="col-12">
                             <div className="categories d-flex justify-content-between flex-wrap align-items-center">
@@ -203,7 +207,7 @@ const Home = () => {
                 </div>
             </section>
             <section className="featured-wrapper py-5 home-wrapper-2">
-                <div className="container-xxl">
+                <div className="container">
                     <div className="row">
                         <div className="col-12">
                             <h3 className="section-heading">sản phẩm nổi bật</h3>
@@ -218,7 +222,7 @@ const Home = () => {
                 </div>
             </section>
             <section className="special-wrapper py-5 home-wrapper-2">
-                <div className="container-xxl">
+                <div className="container">
                     <div className="row">
                         <div className="col-12">
                             <h3 className="section-heading">sản phẩm đặc biệt</h3>
@@ -232,7 +236,7 @@ const Home = () => {
                 </div>
             </section>
             <section className="marquee-wrapper home-wrapper-2 py-5">
-                <div className="container-xxl">
+                <div className="container">
                     <div className="row">
                         <div className="col-12">
                             <div className="marquee-inner-wrapper card-wrapper">
@@ -268,7 +272,7 @@ const Home = () => {
                 </div>
             </section>
             <section className="blog-wrapper py-5 home-wrapper-2">
-                <div className="container-xxl">
+                <div className="container">
                     <div className="row">
                         <div className="col-12">
                             <h3 className="section-heading">Blogs Mới Nhất</h3>

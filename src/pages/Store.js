@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BreadCrumb from '../components/BreadCrumb';
 import Meta from '../components/Meta';
 import ReactStars from 'react-rating-stars-component';
 import ProductCard from '../components/ProductCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllProduct } from '../features/product/productSlice';
 
 const Store = () => {
     const [grid, setGrid] = useState(3);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(getAllProduct());
+    }, [dispatch]);
+    const productState = useSelector((state) => state.product.products);
     return (
         <>
             <Meta title={'Cửa Hàng'} />
@@ -59,19 +66,19 @@ const Store = () => {
                                             <input
                                                 type="email"
                                                 className="form-control py-3"
-                                                id="floatingInput"
+                                                id="floatingInputFrom"
                                                 placeholder="Từ..."
                                             />
-                                            <label htmlFor="floatingInput">Từ ...</label>
+                                            <label htmlFor="floatingInputFrom">Từ ...</label>
                                         </div>
                                         <div className="form-floating">
                                             <input
                                                 type="email"
                                                 className="form-control py-3"
-                                                id="floatingInput"
+                                                id="floatingInputTo"
                                                 placeholder="Đến..."
                                             />
-                                            <label htmlFor="floatingInput">Đến ...</label>
+                                            <label htmlFor="floatingInputTo">Đến ...</label>
                                         </div>
                                     </div>
                                     <h5 className="sub-title">Màu Sắc</h5>
@@ -224,10 +231,7 @@ const Store = () => {
                             </div>
                             <div className="product-list pb-5">
                                 <div className="d-flex flex-wrap">
-                                    <ProductCard grid={grid} />
-                                    <ProductCard grid={grid} />
-                                    <ProductCard grid={grid} />
-                                    <ProductCard grid={grid} />
+                                    <ProductCard data={productState} grid={grid} />
                                 </div>
                             </div>
                         </div>

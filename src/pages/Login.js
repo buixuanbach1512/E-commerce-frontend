@@ -2,8 +2,28 @@ import React from 'react';
 import Meta from '../components/Meta';
 import BreadScumb from '../components/BreadCrumb';
 import { Link } from 'react-router-dom';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
+import { useDispatch } from 'react-redux';
+import { login } from '../features/auth/authSlice';
+
+const schema = Yup.object().shape({
+    email: Yup.string().email('Không phải là email').required('Chưa nhập email'),
+    password: Yup.string().required('Chưa nhập mật khẩu'),
+});
 
 const Login = () => {
+    const dispatch = useDispatch();
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+        },
+        validationSchema: schema,
+        onSubmit: (values) => {
+            dispatch(login(values));
+        },
+    });
     return (
         <>
             <Meta title={'Đăng Nhập'} />
@@ -13,19 +33,41 @@ const Login = () => {
                     <div className="col-12">
                         <div className="auth-card">
                             <h3 className="text-center mb-3">Đăng Nhập</h3>
-                            <form action="POST" className="d-flex flex-column gap-15">
+                            <form onSubmit={formik.handleSubmit} className="d-flex flex-column gap-10">
                                 <div>
-                                    <input type="email" placeholder="Email" className="form-control" />
+                                    <input
+                                        type="email"
+                                        onChange={formik.handleChange('email')}
+                                        onBlur={formik.handleBlur('email')}
+                                        value={formik.values.email}
+                                        placeholder="Email"
+                                        className="form-control"
+                                    />
+                                    <div className="input-err text-danger">
+                                        {formik.touched.email && formik.errors.email}
+                                    </div>
                                 </div>
                                 <div className="mt-1">
-                                    <input type="password" placeholder="Password" className="form-control" />
+                                    <input
+                                        type="password"
+                                        onChange={formik.handleChange('password')}
+                                        onBlur={formik.handleBlur('password')}
+                                        value={formik.values.password}
+                                        placeholder="Password"
+                                        className="form-control"
+                                    />
+                                    <div className="input-err text-danger">
+                                        {formik.touched.password && formik.errors.password}
+                                    </div>
                                 </div>
                                 <div>
                                     <Link className="text-dark" to={'/forgot-password'}>
                                         Quên mật khẩu?
                                     </Link>
                                     <div className=" mt-3 d-flex justify-content-center align-items-center gap-15">
-                                        <button className="button border-0">Đăng Nhập</button>
+                                        <button type="submit" className="button border-0">
+                                            Đăng Nhập
+                                        </button>
                                         <Link to={'/signup'} className="button">
                                             Đăng Ký
                                         </Link>

@@ -5,11 +5,11 @@ import { BsLinkedin, BsGithub, BsYoutube, BsInstagram } from 'react-icons/bs';
 const Footer = () => {
     return (
         <>
-            <footer className="py-4">
-                <div className="container-xxl">
+            <footer className="footer-top py-4">
+                <div className="container">
                     <div className="row align-items-center">
                         <div className="col-5">
-                            <div className="footer-top d-flex gap-30 align-items-center">
+                            <div className="d-flex gap-30 align-items-center">
                                 <img src="images/newsletter.png" alt="newsletter" />
                                 <h4 className="mb-0 text-white">Subscibe để nhận Thông báo</h4>
                             </div>
@@ -31,8 +31,8 @@ const Footer = () => {
                     </div>
                 </div>
             </footer>
-            <footer className="py-3">
-                <div className="container-xxl">
+            <footer className="footer-pc py-3">
+                <div className="container">
                     <div className="row">
                         <div className="col-4">
                             <h4 className="text-white mb-4">Liên Hệ Shop</h4>
@@ -94,8 +94,13 @@ const Footer = () => {
                     </div>
                 </div>
             </footer>
+            <footer className="footer-mobile py-3">
+                <div className="d-flex align-items-center text-white">
+                    <h1 style={{ margin: '0 auto' }}>B-SHOP</h1>
+                </div>
+            </footer>
             <footer className="py-4">
-                <div className="container-xxl">
+                <div className="container">
                     <div className="row">
                         <div className="col-12">
                             <p className="text-center text-white mb-0">
