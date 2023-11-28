@@ -15,7 +15,7 @@ function App() {
     return (
         <>
             <BrowserRouter>
-                <Routes>
+                <Routes forceRefresh={true}>
                     <Route path="/" element={<Layout />}>
                         <Route index element={<Home />} />
                         <Route path="about" element={<About />} />

@@ -231,7 +231,9 @@ const Store = () => {
                             </div>
                             <div className="product-list pb-5">
                                 <div className="d-flex flex-wrap">
-                                    <ProductCard data={productState} grid={grid} />
+                                    {productState?.map((item) => (
+                                        <ProductCard key={item._id} item={item} grid={grid} />
+                                    ))}
                                 </div>
                             </div>
                         </div>

@@ -20,8 +20,14 @@ const getUserWishList = async () => {
     return reponse.data;
 };
 
+const logout = async () => {
+    const reponse = await axios.get(`${baseUrl}user/logout`);
+    return reponse.data;
+};
+
 export const authService = {
     register,
     login,
     getUserWishList,
+    logout,
 };

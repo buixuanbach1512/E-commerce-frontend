@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Meta from '../components/Meta';
 import BreadScumb from '../components/BreadCrumb';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../features/auth/authSlice';
 
 const schema = Yup.object().shape({
@@ -14,6 +14,7 @@ const schema = Yup.object().shape({
 
 const Login = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -24,6 +25,18 @@ const Login = () => {
             dispatch(login(values));
         },
     });
+    const authState = useSelector((state) => state.auth);
+    const { user, isSuccess } = authState;
+    useEffect(() => {
+        if (user !== null || isSuccess) {
+            setTimeout(() => {
+                navigate('/');
+                navigate(0);
+            }, 2000);
+        } else {
+            navigate('/login');
+        }
+    }, [user, isSuccess, navigate]);
     return (
         <>
             <Meta title={'Đăng Nhập'} />

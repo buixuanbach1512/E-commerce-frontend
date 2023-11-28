@@ -38,6 +38,13 @@ export const getUserWishList = createAsyncThunk('auth/get-wishlist', async (thun
         return thunkAPI.rejectWithValue(e);
     }
 });
+export const logout = createAsyncThunk('auth/logout', async (thunkAPI) => {
+    try {
+        return await authService.logout();
+    } catch (e) {
+        return thunkAPI.rejectWithValue(e);
+    }
+});
 
 export const resetState = createAction('Reset-all');
 
@@ -75,7 +82,7 @@ export const authSlice = createSlice({
                 state.isLoading = false;
                 state.isError = false;
                 state.isSuccess = true;
-                state.dataUser = action.payload;
+                state.user = action.payload;
                 if (state.isSuccess === true) {
                     sessionStorage.setItem('token', action.payload.token);
                     toast.success('Đăng nhập thành công!');
@@ -100,6 +107,21 @@ export const authSlice = createSlice({
                 state.wishList = action.payload;
             })
             .addCase(getUserWishList.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.isSuccess = false;
+                state.message = action.error;
+            })
+            .addCase(logout.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(logout.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isError = false;
+                state.isSuccess = true;
+                state.logout = action.payload;
+            })
+            .addCase(logout.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.isSuccess = false;

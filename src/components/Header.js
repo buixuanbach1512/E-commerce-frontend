@@ -1,13 +1,27 @@
-import React, { useState } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { BsSearch } from 'react-icons/bs';
 import { FaBars } from 'react-icons/fa';
 import { FaTimes } from 'react-icons/fa';
+import { CiUser } from 'react-icons/ci';
+import { IoHeartOutline } from 'react-icons/io5';
+import { IoCartOutline } from 'react-icons/io5';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllCategory } from '../features/category/categorySlice';
+import { logout } from '../features/auth/authSlice';
 
 const Header = () => {
-    const user = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : null;
-
+    const dispatch = useDispatch();
+    const customer = sessionStorage.getItem('customer') ? JSON.parse(sessionStorage.getItem('customer')) : null;
     const [navMenu, setnavMenu] = useState(false);
+    const categoryState = useSelector((state) => state.category.categories);
+    useEffect(() => {
+        dispatch(getAllCategory());
+    }, [dispatch]);
+
+    const logoutUser = () => {
+        dispatch(logout());
+    };
     return (
         <>
             <header className="header-top py-3">
@@ -52,31 +66,45 @@ const Header = () => {
                         <div className="col-4">
                             <div className="header-upper-links d-flex align-items-center justify-content-end gap-15">
                                 <div className="nav-links">
-                                    <Link className="d-flex align-items-center gap-10 text-white" to="/wishlist">
-                                        <img src="images/wishlist.svg" alt="wishlist" />
+                                    <Link
+                                        className="d-flex align-items-center gap-10 text-white"
+                                        to={customer !== null ? '/wishlist' : ''}
+                                    >
+                                        <IoHeartOutline className="header-icon" />
                                         <p className="mb-0 header-upper-text">
                                             Danh sách
                                             <br />
-                                            Mong muốn
+                                            Yêu thích
                                         </p>
                                     </Link>
                                 </div>
                                 <div className="nav-links">
-                                    <Link
-                                        className="d-flex align-items-center gap-10 text-white"
-                                        to={user !== null ? '/logout' : '/login'}
-                                    >
-                                        <img src="images/user.svg" alt="user" />
-                                        <p className="mb-0 header-upper-text">
-                                            Đăng nhập
-                                            <br />
-                                            Tài Khoản Của Tôi
-                                        </p>
-                                    </Link>
+                                    {customer !== null ? (
+                                        <button
+                                            className="d-flex align-items-center gap-10 text-white bg-transparent border-0"
+                                            onClick={() => logoutUser()}
+                                        >
+                                            <CiUser className="header-icon" />
+                                            <p className="mb-0 header-upper-text">
+                                                {customer.name}
+                                                <br />
+                                                Đăng Xuất
+                                            </p>
+                                        </button>
+                                    ) : (
+                                        <Link className="d-flex align-items-center gap-10 text-white" to="/login">
+                                            <CiUser className="header-icon" />
+                                            <p className="mb-0 header-upper-text">
+                                                Đăng nhập
+                                                <br />
+                                                Tài Khoản Của Tôi
+                                            </p>
+                                        </Link>
+                                    )}
                                 </div>
                                 <div>
                                     <Link className="d-flex align-items-center gap-10 text-white">
-                                        <img src="images/cart.svg" alt="cart" />
+                                        <IoCartOutline className="header-icon cart-icon" />
                                         <div className="d-flex flex-column gap-10">
                                             <span className="badge bg-white text-dark">0</span>
                                             <p className="mb-0 header-upper-text">
@@ -107,31 +135,23 @@ const Header = () => {
                                             <span className="me-5 d-inline-block">Danh Mục Sản Phẩm</span>
                                         </button>
                                         <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            <li>
-                                                <Link className="dropdown-item text-white" to="">
-                                                    Action
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link className="dropdown-item text-white" to="">
-                                                    Another action
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link className="dropdown-item text-white" to="">
-                                                    Something else here
-                                                </Link>
-                                            </li>
+                                            {categoryState?.map((item) => (
+                                                <li key={item._id}>
+                                                    <Link className="dropdown-item text-white" to="">
+                                                        {item.name}
+                                                    </Link>
+                                                </li>
+                                            ))}
                                         </ul>
                                     </div>
                                 </div>
 
                                 <div className="menu-links">
                                     <div className="d-flex align-items-center gap-15">
-                                        <NavLink to="/">Home</NavLink>
-                                        <NavLink to="/store">Cửa Hàng</NavLink>
-                                        <NavLink to="/">Blogs</NavLink>
-                                        <NavLink to="/contact">Liên Hệ</NavLink>
+                                        <Link to="/">Home</Link>
+                                        <Link to="/store">Cửa Hàng</Link>
+                                        <Link to="/">Blogs</Link>
+                                        <Link to="/contact">Liên Hệ</Link>
                                     </div>
                                 </div>
                                 <FaBars className="nav-button" onClick={() => setnavMenu(true)} />

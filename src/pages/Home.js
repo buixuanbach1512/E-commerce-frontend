@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Marquee from 'react-fast-marquee';
 import BlogCard from '../components/BlogCard';
 import ProductCard from '../components/ProductCard';
 import SpecialProduct from '../components/SpecialProduct';
 import Meta from '../components/Meta';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllProduct } from '../features/product/productSlice';
 
 const Home = () => {
+    const dispatch = useDispatch();
+    const productState = useSelector((state) => state.product.products);
+    useEffect(() => {
+        dispatch(getAllProduct());
+    }, [dispatch]);
     return (
         <>
             <Meta title={'B-Shop'} />
@@ -212,12 +219,10 @@ const Home = () => {
                         <div className="col-12">
                             <h3 className="section-heading">sản phẩm nổi bật</h3>
                         </div>
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
+                        {productState &&
+                            productState
+                                ?.filter((item) => item.tags === 'featured')
+                                ?.map((item) => <ProductCard key={item._id} item={item} />)}
                     </div>
                 </div>
             </section>
@@ -229,9 +234,10 @@ const Home = () => {
                         </div>
                     </div>
                     <div className="row">
-                        <SpecialProduct />
-                        <SpecialProduct />
-                        <SpecialProduct />
+                        {productState &&
+                            productState
+                                ?.filter((item) => item.tags === 'special')
+                                ?.map((item) => <SpecialProduct key={item._id} item={item} />)}
                     </div>
                 </div>
             </section>

@@ -2,26 +2,34 @@ import React from 'react';
 import ReactStars from 'react-rating-stars-component';
 import { Link } from 'react-router-dom';
 
-const SpecialProduct = () => {
+const SpecialProduct = (props) => {
+    const { item } = props;
     return (
-        <div className="col-6 mb-3">
+        <div key={item._id} className="col-6 mb-3">
             <div className="special-product-card">
                 <div className="d-flex justify-content-between">
                     <div className="special-product-image">
                         <img className="img-fluid" src="images/watch.jpg" alt="watch" />
                     </div>
                     <div className="special-product-content">
-                        <h5 className="brand">Adidas</h5>
-                        <h6 className="title">Quần Jean xanh rách gối djsadsajjdaskjdjksajd</h6>
-                        <ReactStars count={5} size={24} value={3} edit={false} activeColor="#ffd700" />
+                        <h5 className="brand">{item.brand.name}</h5>
+                        <h6 className="title">{item.name}</h6>
+                        <ReactStars
+                            count={5}
+                            size={24}
+                            value={Number(item.totalRating)}
+                            edit={false}
+                            activeColor="#ffd700"
+                        />
                         <p className="price">
                             <span className="red-p">
-                                100.000<sup>đ</sup>
+                                {item.price}
+                                <sup>đ</sup>
                             </span>
                             &nbsp;
-                            <strike>
-                                150.000<sup>đ</sup>
-                            </strike>
+                            {/* <strike>
+                                        150.000<sup>đ</sup>
+                                    </strike> */}
                         </p>
                         <div className="discount-till d-flex align-items-center gap-10">
                             <p className="mb-0">
@@ -34,16 +42,16 @@ const SpecialProduct = () => {
                             </div>
                         </div>
                         <div className="prod-count my-3">
-                            <p>5 Sản Phẩm</p>
+                            <p>{item.quantity} Sản Phẩm</p>
                             <div className="progress">
                                 <div
                                     className="progress-bar"
                                     role="progressbar"
                                     aria-label="Basic example"
-                                    style={{ width: '25%' }}
-                                    aria-valuenow="25"
-                                    aria-valuemin="0"
-                                    aria-valuemax="100"
+                                    style={{ width: (item.quantity / (item.quantity + item.sold)) * 100 + '%' }}
+                                    aria-valuenow={item.quantity / (item.quantity + item.sold)}
+                                    aria-valuemin={item.quantity}
+                                    aria-valuemax={item.sold + item.quantity}
                                 ></div>
                             </div>
                         </div>
