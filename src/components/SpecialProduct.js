@@ -9,18 +9,14 @@ const SpecialProduct = (props) => {
             <div className="special-product-card">
                 <div className="d-flex justify-content-between">
                     <div className="special-product-image">
-                        <img className="img-fluid" src="images/watch.jpg" alt="watch" />
+                        <Link to={`/product/${item._id}`}>
+                            <img className="img-fluid" src="images/watch.jpg" alt="watch" />
+                        </Link>
                     </div>
                     <div className="special-product-content">
                         <h5 className="brand">{item.brand.name}</h5>
                         <h6 className="title">{item.name}</h6>
-                        <ReactStars
-                            count={5}
-                            size={24}
-                            value={Number(item.totalRating)}
-                            edit={false}
-                            activeColor="#ffd700"
-                        />
+                        <ReactStars count={5} size={24} value={item.totalRating} edit={false} activeColor="#ffd700" />
                         <p className="price">
                             <span className="red-p">
                                 {item.price}
@@ -55,7 +51,9 @@ const SpecialProduct = (props) => {
                                 ></div>
                             </div>
                         </div>
-                        <Link className="button">Thêm vào giỏ hàng</Link>
+                        <Link to={`/product/${item._id}`} className="button">
+                            Xem sản phẩm
+                        </Link>
                     </div>
                 </div>
             </div>

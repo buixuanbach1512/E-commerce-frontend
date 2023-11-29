@@ -7,8 +7,8 @@ const getAllProduct = async () => {
     return response.data;
 };
 
-const getProductFeatured = async () => {
-    const response = await axios.get(`${baseUrl}product/featured`);
+const getAProduct = async (prodId) => {
+    const response = await axios.get(`${baseUrl}product/${prodId}`);
     return response.data;
 };
 
@@ -19,6 +19,6 @@ const addToWishList = async (prodId) => {
 
 export const productService = {
     getAllProduct,
-    getProductFeatured,
+    getAProduct,
     addToWishList,
 };

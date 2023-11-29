@@ -92,7 +92,7 @@ const SignUp = () => {
                                         onBlur={formik.handleBlur('mobile')}
                                         value={formik.values.mobile}
                                         placeholder="Số điện thoại"
-                                        className="form-control"
+                                        className="form-control sign-up"
                                     />
                                     <div className="input-err text-danger">
                                         {formik.touched.mobile && formik.errors.mobile}

@@ -10,23 +10,28 @@ import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import SignUp from './pages/SignUp';
 import WishList from './pages/WishList';
+import Product from './pages/Product';
+import ScrollToTop from './utils/ScrollToTop';
 
 function App() {
     return (
         <>
             <BrowserRouter>
-                <Routes forceRefresh={true}>
-                    <Route path="/" element={<Layout />}>
-                        <Route index element={<Home />} />
-                        <Route path="about" element={<About />} />
-                        <Route path="contact" element={<Contact />} />
-                        <Route path="store" element={<Store />} />
-                        <Route path="wishlist" element={<WishList />} />
-                        <Route path="login" element={<Login />} />
-                        <Route path="signup" element={<SignUp />} />
-                        <Route path="forgot-password" element={<ForgotPassword />} />
-                    </Route>
-                </Routes>
+                <ScrollToTop>
+                    <Routes forceRefresh={true}>
+                        <Route path="/" element={<Layout />}>
+                            <Route index element={<Home />} />
+                            <Route path="about" element={<About />} />
+                            <Route path="contact" element={<Contact />} />
+                            <Route path="store" element={<Store />} />
+                            <Route path="/product/:id" element={<Product />} />
+                            <Route path="wishlist" element={<WishList />} />
+                            <Route path="login" element={<Login />} />
+                            <Route path="signup" element={<SignUp />} />
+                            <Route path="forgot-password" element={<ForgotPassword />} />
+                        </Route>
+                    </Routes>
+                </ScrollToTop>
             </BrowserRouter>
         </>
     );

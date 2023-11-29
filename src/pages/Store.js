@@ -5,6 +5,7 @@ import ReactStars from 'react-rating-stars-component';
 import ProductCard from '../components/ProductCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllProduct } from '../features/product/productSlice';
+import Color from '../components/Color';
 
 const Store = () => {
     const [grid, setGrid] = useState(3);
@@ -83,23 +84,7 @@ const Store = () => {
                                     </div>
                                     <h5 className="sub-title">Màu Sắc</h5>
                                     <div>
-                                        <ul className="colors ps-0">
-                                            <li></li>
-                                            <li></li>
-                                            <li></li>
-                                            <li></li>
-                                            <li></li>
-                                            <li></li>
-                                            <li></li>
-                                            <li></li>
-                                            <li></li>
-                                            <li></li>
-                                            <li></li>
-                                            <li></li>
-                                            <li></li>
-                                            <li></li>
-                                            <li></li>
-                                        </ul>
+                                        <Color />
                                     </div>
                                     <h5 className="sub-title">Size</h5>
                                     <div>

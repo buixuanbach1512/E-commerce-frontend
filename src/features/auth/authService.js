@@ -8,7 +8,9 @@ const register = async (userData) => {
 };
 
 const login = async (userData) => {
-    const reponse = await axios.post(`${baseUrl}user/login`, userData);
+    const reponse = await axios.post(`${baseUrl}user/login`, userData, {
+        withCredentials: true,
+    });
     if (reponse.data) {
         sessionStorage.setItem('customer', JSON.stringify(reponse.data));
     }

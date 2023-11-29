@@ -15,9 +15,9 @@ export const getAllProduct = createAsyncThunk('product/get-all-product', async (
     }
 });
 
-export const getProductFeatured = createAsyncThunk('product/get-featured-product', async (thunkAPI) => {
+export const getAProduct = createAsyncThunk('product/get-a-product', async (prodId, thunkAPI) => {
     try {
-        return await productService.getProductFeatured();
+        return await productService.getAProduct(prodId);
     } catch (e) {
         return thunkAPI.rejectWithValue(e);
     }
@@ -69,16 +69,16 @@ export const productSlice = createSlice({
                 state.isError = true;
                 state.message = action.error;
             })
-            .addCase(getProductFeatured.pending, (state) => {
+            .addCase(getAProduct.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(getProductFeatured.fulfilled, (state, action) => {
+            .addCase(getAProduct.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.isError = false;
-                state.featuredProd = action.payload;
+                state.getAProd = action.payload;
             })
-            .addCase(getProductFeatured.rejected, (state, action) => {
+            .addCase(getAProduct.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = false;
                 state.isError = true;

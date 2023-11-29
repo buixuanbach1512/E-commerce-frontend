@@ -28,29 +28,23 @@ const ProductCard = (props) => {
                     </button>
                 </div>
                 <div className="product-image">
-                    <img className="img-fluid" src={item.images[0].url} alt="productimage" />
+                    <Link to={`/product/${item._id}`}>
+                        <img className="img-fluid" src={item.images[0].url} alt="productimage" />
+                    </Link>
                 </div>
-                <Link>
-                    <div className="product-details">
-                        <h6 className="brand">{item.brand.name}</h6>
-                        <h5 className="product-title">{item.name}</h5>
-                        <ReactStars
-                            count={5}
-                            size={24}
-                            value={Number(item?.totalRating)}
-                            edit={false}
-                            activeColor="#ffd700"
-                        />
-                        <p className={`description ${grid === 12 ? 'd-block' : 'd-none'}`}>{item.description}</p>
-                        <p className="price">
-                            {item.price}
-                            <sup>đ</sup>
-                        </p>
-                    </div>
-                </Link>
+                <div className="product-details">
+                    <h6 className="brand">{item.brand.name}</h6>
+                    <h5 className="product-title">{item.name}</h5>
+                    <ReactStars count={5} size={24} value={item.totalRating} edit={false} activeColor="#ffd700" />
+                    <p className={`description ${grid === 12 ? 'd-block' : 'd-none'}`}>{item.description}</p>
+                    <p className="price">
+                        {item.price}
+                        <sup>đ</sup>
+                    </p>
+                </div>
                 <div className="action-bar position-absolute">
                     <div className="d-flex flex-column">
-                        <Link className="mb-1">
+                        <Link className="mb-1" to={`/product/${item._id}`}>
                             <BsEye className="prod-icon eye-icon" />
                         </Link>
                         <Link>
