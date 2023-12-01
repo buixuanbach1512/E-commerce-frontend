@@ -12,6 +12,8 @@ import SignUp from './pages/SignUp';
 import WishList from './pages/WishList';
 import Product from './pages/Product';
 import ScrollToTop from './utils/ScrollToTop';
+import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
 
 function App() {
     return (
@@ -24,7 +26,9 @@ function App() {
                             <Route path="about" element={<About />} />
                             <Route path="contact" element={<Contact />} />
                             <Route path="store" element={<Store />} />
-                            <Route path="/product/:id" element={<Product />} />
+                            <Route path="cart" element={<Cart />} />
+                            <Route path="checkout" element={<Checkout />} />
+                            <Route path="product/:id" element={<Product />} />
                             <Route path="wishlist" element={<WishList />} />
                             <Route path="login" element={<Login />} />
                             <Route path="signup" element={<SignUp />} />

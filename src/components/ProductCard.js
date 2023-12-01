@@ -44,7 +44,7 @@ const ProductCard = (props) => {
                 </div>
                 <div className="action-bar position-absolute">
                     <div className="d-flex flex-column">
-                        <Link className="mb-1" to={`/product/${item._id}`}>
+                        <Link className="mb-3" to={`/product/${item._id}`}>
                             <BsEye className="prod-icon eye-icon" />
                         </Link>
                         <Link>

@@ -18,7 +18,7 @@ html {
     font-size: 62.5%;
 }
 body {
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 .section-heading {
     font-size: 2rem;
@@ -350,13 +350,40 @@ input[type='number'].sign-up::-webkit-outer-spin-button {
     font-size: 1.4rem;
 }
 .action-bar {
+    top: 11%;
+    right: -30px;
+    transition: 0.3s;
+}
+.col-4 .action-bar {
     top: 9%;
     right: -30px;
     transition: 0.3s;
 }
+.col-6 .action-bar {
+    top: 9%;
+    right: -30px;
+    transition: 0.3s;
+}
+.col-12 .action-bar {
+    top: 15%;
+    right: -30px;
+    transition: 0.3s;
+}
+.col-6 .product-card img {
+    display: block;
+    margin: 0 auto;
+}
+.col-12 .product-card {
+    display: flex;
+    gap: 10px;
+}
+.col-12 .product-card .product-image {
+    width: 100%;
+    height: auto;
+}
 .wishlist-icon {
     top: 2%;
-    right: 15px;
+    right: 14px;
 }
 .prod-icon {
     font-size: 1.8rem;
@@ -444,28 +471,6 @@ filter-card .form-check-label {
 .grid img:hover {
     cursor: pointer;
 }
-.col-4 .action-bar {
-    top: 7%;
-    right: -30px;
-    transition: 0.3s;
-}
-.col-6 .action-bar {
-    top: 7%;
-    right: -30px;
-    transition: 0.3s;
-}
-.col-6 .product-card img {
-    display: block;
-    margin: 0 auto;
-}
-.col-12 .product-card {
-    display: flex;
-    gap: 10px;
-}
-.col-12 .product-card .product-image {
-    height: auto;
-}
-
 .auth-card {
     padding: 20px;
     background-color: white;
@@ -657,6 +662,53 @@ filter-card .form-check-label {
     color: var(--color-777777);
 }
 /* End Product Page */
+
+/* Cart Page */
+.cart-head,
+.cart-data {
+    border-bottom: 1px solid #eaeaea;
+}
+.cart-head h4 {
+    font-size: 1.2rem;
+    color: var(--color-777777);
+}
+.cart-col-1 {
+    width: 40%;
+}
+.cart-col-2 {
+    width: 10%;
+}
+.cart-col-3 {
+    width: 15%;
+}
+.cart-col-4 {
+    width: 15%;
+}
+.cart-col-1 p {
+    font-size: 1.1rem;
+    color: var(--color-777777);
+}
+.cart-col-1 h5.price {
+    font-size: 1.2rem;
+    color: var(--color-1c1c1b);
+}
+
+/* End Cart Page */
+
+/* Check Out Page */
+
+.ck-link {
+    color: var(--color-777777);
+}
+.ck-link:hover {
+    color: #febd69;
+}
+.total-price {
+    font-size: 1.6rem;
+    color: var(--color-1c1c1b);
+}
+
+/* End Check Out Page */
 
 /* Footer */
 

@@ -9,6 +9,7 @@ const getUserfromSessionStorage = sessionStorage.getItem('customer')
 const initialState = {
     user: getUserfromSessionStorage,
     wishList: '',
+    cart: [],
     isLoading: false,
     isSuccess: false,
     isError: false,
@@ -38,6 +39,23 @@ export const getUserWishList = createAsyncThunk('auth/get-wishlist', async (thun
         return thunkAPI.rejectWithValue(e);
     }
 });
+
+export const addToCart = createAsyncThunk('auth/add-to-cart', async (dataCart, thunkAPI) => {
+    try {
+        return await authService.addToCart(dataCart);
+    } catch (e) {
+        return thunkAPI.rejectWithValue(e);
+    }
+});
+
+export const getCart = createAsyncThunk('auth/get-cart', async (thunkAPI) => {
+    try {
+        return await authService.getCart();
+    } catch (e) {
+        return thunkAPI.rejectWithValue(e);
+    }
+});
+
 export const logout = createAsyncThunk('auth/logout', async (thunkAPI) => {
     try {
         return await authService.logout();
@@ -107,6 +125,42 @@ export const authSlice = createSlice({
                 state.wishList = action.payload;
             })
             .addCase(getUserWishList.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.isSuccess = false;
+                state.message = action.error;
+            })
+            .addCase(addToCart.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(addToCart.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isError = false;
+                state.isSuccess = true;
+                state.addcart = action.payload;
+                if (state.isSuccess === true) {
+                    toast.success('Sản phẩm được thêm vào giỏ hàng');
+                }
+            })
+            .addCase(addToCart.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.isSuccess = false;
+                state.message = action.error;
+                if (state.isError === true) {
+                    toast.error('Đã có lỗi xảy ra!!!');
+                }
+            })
+            .addCase(getCart.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getCart.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isError = false;
+                state.isSuccess = true;
+                state.cart = action.payload;
+            })
+            .addCase(getCart.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.isSuccess = false;

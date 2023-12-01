@@ -1,7 +1,7 @@
 import React from 'react';
 import BreadCrumb from '../components/BreadCrumb';
 import Meta from '../components/Meta';
-import BlogCard from '../components/BlogCard';
+import ProductCard from '../components/ProductCard';
 import ReactStars from 'react-rating-stars-component';
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -9,22 +9,41 @@ import ReactImageZoom from 'react-image-zoom';
 import Color from '../components/Color';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { getAProduct } from '../features/product/productSlice';
+import { getAProduct, getAllProduct } from '../features/product/productSlice';
+import { toast } from 'react-toastify';
+import { addToCart } from '../features/auth/authSlice';
 
 const Product = () => {
+    const [quantity, setQuantity] = useState(1);
+    const [color, setColor] = useState(null);
     const location = useLocation();
     const dispatch = useDispatch();
     const prodId = location.pathname.split('/')[2];
     const [writeReview, setWriteReview] = useState(true);
     const prodState = useSelector((state) => state?.product?.getAProd);
+    const allProdState = useSelector((state) => state?.product?.products);
     useEffect(() => {
         dispatch(getAProduct(prodId));
+        dispatch(getAllProduct());
     }, [dispatch, prodId]);
     const props = {
         zoomPosition: 'original',
         img: `${prodState?.images[0]?.url}`,
     };
-
+    const addCart = () => {
+        if (color === null) {
+            toast.error('Chưa chọn màu sản phẩm');
+            return false;
+        } else {
+            const data = {
+                productId: prodState?._id,
+                quantity,
+                color,
+                price: prodState?.price,
+            };
+            dispatch(addToCart(data));
+        }
+    };
     return (
         <>
             <Meta title={'Product'} />
@@ -106,7 +125,7 @@ const Product = () => {
                                     </div>
                                     <div className="d-flex gap-10 flex-column my-2">
                                         <h3 className="product-label">Màu sắc :</h3>
-                                        <Color />
+                                        <Color colorData={prodState?.color} setColor={setColor} />
                                     </div>
                                     <div className="d-flex gap-15 flex-row align-items-center mt-2 mb-3">
                                         <h3 className="product-label">Số lượng :</h3>
@@ -117,10 +136,12 @@ const Product = () => {
                                                 max={10}
                                                 className="form-control"
                                                 style={{ width: 70 }}
+                                                onChange={(e) => setQuantity(e.target.value)}
+                                                value={quantity}
                                             />
                                         </div>
                                         <div className="d-flex gap-10 align-items-center">
-                                            <button type="submit" className="button border-0">
+                                            <button onClick={() => addCart()} type="submit" className="button border-0">
                                                 Thêm vào giỏ hàng
                                             </button>
                                             <button to={'/signup'} className="button border-0">
@@ -236,12 +257,13 @@ const Product = () => {
                 <div className="container">
                     <div className="row">
                         <div className="col-12">
-                            <h3 className="section-heading">Blogs Mới Nhất</h3>
+                            <h3 className="section-heading">Sản Phẩm Nổi Bật</h3>
                         </div>
-                        <BlogCard />
-                        <BlogCard />
-                        <BlogCard />
-                        <BlogCard />
+                        {allProdState
+                            ?.filter((item) => item.tags === 'popular')
+                            ?.map((item) => (
+                                <ProductCard key={item._id} item={item} />
+                            ))}
                     </div>
                 </div>
             </section>
