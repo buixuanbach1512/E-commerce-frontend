@@ -5,13 +5,29 @@ import { FaRegTrashCan } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { getCart } from '../features/auth/authSlice';
+import { getCart, removeProdCart, updateCart } from '../features/auth/authSlice';
+import { useState } from 'react';
 const Cart = () => {
+    const [cartData, setCartData] = useState(null);
     const dispatch = useDispatch();
     const cartState = useSelector((state) => state.auth.cart);
     useEffect(() => {
         dispatch(getCart());
     }, [dispatch]);
+    useEffect(() => {
+        if (cartData !== null) {
+            dispatch(updateCart(cartData));
+            setTimeout(() => {
+                dispatch(getCart());
+            }, 200);
+        }
+    }, [cartData, dispatch]);
+    const removePCart = (id) => {
+        dispatch(removeProdCart(id));
+        setTimeout(() => {
+            dispatch(getCart());
+        }, 200);
+    };
     return (
         <>
             <Meta title={'Giỏ hàng'} />
@@ -64,13 +80,19 @@ const Cart = () => {
                                                     className="form-control"
                                                     min={1}
                                                     max={10}
-                                                    value={item?.quantity}
+                                                    value={cartData?.quantity ? cartData?.quantity : item?.quantity}
+                                                    onChange={(e) =>
+                                                        setCartData({ id: item?._id, quantity: e.target.value })
+                                                    }
                                                 />
                                             </div>
                                             <div>
-                                                <Link>
+                                                <button
+                                                    onClick={() => removePCart(item._id)}
+                                                    className="bg-transparent border-0"
+                                                >
                                                     <FaRegTrashCan className="text-danger fs-5" />
-                                                </Link>
+                                                </button>
                                             </div>
                                         </div>
                                         <div className="cart-col-4">

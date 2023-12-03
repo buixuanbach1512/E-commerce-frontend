@@ -32,7 +32,7 @@ const Login = () => {
             setTimeout(() => {
                 navigate('/');
                 navigate(0);
-            }, 2000);
+            }, 200);
         } else {
             navigate('/login');
         }

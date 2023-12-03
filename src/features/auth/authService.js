@@ -3,47 +3,64 @@ import { baseUrl } from '../../utils/baseUrl';
 import { config } from '../../utils/axiosConfig';
 
 const register = async (userData) => {
-    const reponse = await axios.post(`${baseUrl}user/register`, userData);
-    if (reponse.data) {
-        return reponse.data;
+    const response = await axios.post(`${baseUrl}user/register`, userData);
+    if (response.data) {
+        return response.data;
     }
 };
 
 const login = async (userData) => {
-    const reponse = await axios.post(`${baseUrl}user/login`, userData, {
+    const response = await axios.post(`${baseUrl}user/login`, userData, {
         withCredentials: true,
     });
-    if (reponse.data) {
-        sessionStorage.setItem('customer', JSON.stringify(reponse.data));
-        return reponse.data;
+    if (response.data) {
+        sessionStorage.setItem('customer', JSON.stringify(response.data));
+        return response.data;
     }
 };
 
 const getUserWishList = async () => {
-    const reponse = await axios.get(`${baseUrl}user/wishlist`, config);
-    if (reponse.data) {
-        return reponse.data;
+    const response = await axios.get(`${baseUrl}user/wishlist`, config);
+    if (response.data) {
+        return response.data;
     }
 };
 
 const addToCart = async (cartData) => {
-    const reponse = await axios.post(`${baseUrl}user/add-to-cart`, cartData, config);
-    if (reponse.data) {
-        return reponse.data;
+    const response = await axios.post(`${baseUrl}user/add-to-cart`, cartData, config);
+    if (response.data) {
+        return response.data;
     }
 };
 
 const getCart = async () => {
-    const reponse = await axios.get(`${baseUrl}user/cart`, config);
-    if (reponse.data) {
-        return reponse.data;
+    const response = await axios.get(`${baseUrl}user/cart`, config);
+    if (response.data) {
+        return response.data;
+    }
+};
+
+const removeProdCart = async (id) => {
+    const response = await axios.delete(`${baseUrl}user/delete-cart/${id}`, config);
+    if (response.data) {
+        return response.data;
+    }
+};
+const updateQuantityCart = async (cartData) => {
+    const response = await axios.put(
+        `${baseUrl}user/update-cart/${cartData.id}/${cartData.quantity}`,
+        cartData,
+        config,
+    );
+    if (response.data) {
+        return response.data;
     }
 };
 
 const logout = async () => {
-    const reponse = await axios.get(`${baseUrl}user/logout`);
-    if (reponse.data) {
-        return reponse.data;
+    const response = await axios.post(`${baseUrl}user/logout`);
+    if (response.data) {
+        return response.data;
     }
 };
 
@@ -53,5 +70,7 @@ export const authService = {
     getUserWishList,
     addToCart,
     getCart,
+    removeProdCart,
+    updateQuantityCart,
     logout,
 };

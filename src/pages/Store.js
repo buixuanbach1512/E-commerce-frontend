@@ -6,14 +6,17 @@ import ProductCard from '../components/ProductCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllProduct } from '../features/product/productSlice';
 import Color from '../components/Color';
+import { getAllColor } from '../features/color/colorSlice';
 
 const Store = () => {
     const [grid, setGrid] = useState(3);
     const dispatch = useDispatch();
+    const productState = useSelector((state) => state.product.products);
+    const colorState = useSelector((state) => state.color.colors);
     useEffect(() => {
         dispatch(getAllProduct());
+        dispatch(getAllColor());
     }, [dispatch]);
-    const productState = useSelector((state) => state.product.products);
     return (
         <>
             <Meta title={'Cửa Hàng'} />
@@ -84,7 +87,7 @@ const Store = () => {
                                     </div>
                                     <h5 className="sub-title">Màu Sắc</h5>
                                     <div>
-                                        <Color />
+                                        <Color colorData={colorState} />
                                     </div>
                                     <h5 className="sub-title">Size</h5>
                                     <div>

@@ -4,28 +4,40 @@ import Meta from '../components/Meta';
 import ProductCard from '../components/ProductCard';
 import ReactStars from 'react-rating-stars-component';
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ReactImageZoom from 'react-image-zoom';
 import Color from '../components/Color';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getAProduct, getAllProduct } from '../features/product/productSlice';
 import { toast } from 'react-toastify';
-import { addToCart } from '../features/auth/authSlice';
+import { addToCart, getCart } from '../features/auth/authSlice';
 
 const Product = () => {
     const [quantity, setQuantity] = useState(1);
     const [color, setColor] = useState(null);
+    const [added, setAdded] = useState(false);
+    const [border, setBorder] = useState(null);
     const location = useLocation();
     const dispatch = useDispatch();
-    const prodId = location.pathname.split('/')[2];
-    const [writeReview, setWriteReview] = useState(true);
+    const navigate = useNavigate();
+    const productId = location.pathname.split('/')[2];
     const prodState = useSelector((state) => state?.product?.getAProd);
     const allProdState = useSelector((state) => state?.product?.products);
+    const getCartState = useSelector((state) => state?.auth?.cart);
     useEffect(() => {
-        dispatch(getAProduct(prodId));
+        dispatch(getAProduct(productId));
         dispatch(getAllProduct());
-    }, [dispatch, prodId]);
+        dispatch(getCart());
+    }, [dispatch, productId]);
+    useEffect(() => {
+        for (let i = 0; i < getCartState.length; i++) {
+            if (productId === getCartState[i].prodId._id) {
+                setAdded(true);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const props = {
         zoomPosition: 'original',
         img: `${prodState?.images[0]?.url}`,
@@ -106,7 +118,7 @@ const Product = () => {
                                         <h3 className="product-label">Kho hàng :</h3>
                                         <p className=" product-data">{prodState?.quantity}</p>
                                     </div>
-                                    <div className="d-flex gap-10 flex-column my-2">
+                                    {/* <div className="d-flex gap-10 flex-column my-2">
                                         <h3 className="product-label">Size :</h3>
                                         <div className="d-flex flex-wrap gap-10">
                                             <span className="badge border fs-6 border-1 bg-white text-dark border-secondary">
@@ -122,29 +134,55 @@ const Product = () => {
                                                 XXL
                                             </span>
                                         </div>
-                                    </div>
-                                    <div className="d-flex gap-10 flex-column my-2">
-                                        <h3 className="product-label">Màu sắc :</h3>
-                                        <Color colorData={prodState?.color} setColor={setColor} />
-                                    </div>
+                                    </div> */}
+                                    {added === false && (
+                                        <>
+                                            <div className="d-flex gap-10 flex-column my-2">
+                                                <h3 className="product-label">Màu sắc :</h3>
+                                                <Color
+                                                    colorData={prodState?.color}
+                                                    setColor={setColor}
+                                                    setBorder={setBorder}
+                                                    border={border}
+                                                />
+                                            </div>
+                                        </>
+                                    )}
+
                                     <div className="d-flex gap-15 flex-row align-items-center mt-2 mb-3">
-                                        <h3 className="product-label">Số lượng :</h3>
-                                        <div>
-                                            <input
-                                                type="number"
-                                                min={1}
-                                                max={10}
-                                                className="form-control"
-                                                style={{ width: 70 }}
-                                                onChange={(e) => setQuantity(e.target.value)}
-                                                value={quantity}
-                                            />
-                                        </div>
-                                        <div className="d-flex gap-10 align-items-center">
-                                            <button onClick={() => addCart()} type="submit" className="button border-0">
-                                                Thêm vào giỏ hàng
+                                        {added === false && (
+                                            <>
+                                                <h3 className="product-label">Số lượng :</h3>
+                                                <div>
+                                                    <input
+                                                        type="number"
+                                                        min={1}
+                                                        max={10}
+                                                        className="form-control"
+                                                        style={{ width: 70 }}
+                                                        onChange={(e) => setQuantity(e.target.value)}
+                                                        value={quantity}
+                                                    />
+                                                </div>
+                                            </>
+                                        )}
+                                        <div
+                                            className={
+                                                added
+                                                    ? 'mt-3 d-flex gap-10 align-items-center'
+                                                    : 'mt-0 d-flex gap-10 align-items-center'
+                                            }
+                                        >
+                                            <button
+                                                onClick={() => {
+                                                    added ? navigate('/cart') : addCart();
+                                                }}
+                                                type="submit"
+                                                className="button border-0"
+                                            >
+                                                {added ? 'Đến giỏ hàng' : 'Thêm vào giỏ hàng'}
                                             </button>
-                                            <button to={'/signup'} className="button border-0">
+                                            <button to="" className="button border-0">
                                                 Mua ngay
                                             </button>
                                         </div>
@@ -193,13 +231,11 @@ const Product = () => {
                                             <p className="mb-0">Dựa trên 2 đánh giá</p>
                                         </div>
                                     </div>
-                                    {writeReview && (
-                                        <div>
-                                            <Link href="# " className="text-decoration-underline">
-                                                Viết đánh giá
-                                            </Link>
-                                        </div>
-                                    )}
+                                    <div>
+                                        <Link href="# " className="text-decoration-underline">
+                                            Viết đánh giá
+                                        </Link>
+                                    </div>
                                 </div>
                                 <div className="review-form py-4">
                                     <h4>Viết đánh giá của bạn</h4>
