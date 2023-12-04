@@ -54,6 +54,9 @@ const Product = () => {
                 price: prodState?.price,
             };
             dispatch(addToCart(data));
+            setTimeout(() => {
+                navigate('/cart')
+            }, 2000);
         }
     };
     return (

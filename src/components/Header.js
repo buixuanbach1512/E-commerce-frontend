@@ -8,16 +8,31 @@ import { IoHeartOutline } from 'react-icons/io5';
 import { IoCartOutline } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategory } from '../features/category/categorySlice';
-import { logout } from '../features/auth/authSlice';
+import { getCart, logout } from '../features/auth/authSlice';
 
 const Header = () => {
     const dispatch = useDispatch();
     const customer = sessionStorage.getItem('customer') ? JSON.parse(sessionStorage.getItem('customer')) : null;
     const [navMenu, setnavMenu] = useState(false);
+    const [totalPrice, setTotalPrice] = useState(null);
+    const [cartQuantity, setCartQuantity] = useState(0)
     const categoryState = useSelector((state) => state.category.categories);
+    const cartState = useSelector((state) => state.auth.cart);
     useEffect(() => {
         dispatch(getAllCategory());
+        dispatch(getCart())
     }, [dispatch]);
+
+    useEffect(()=>{
+        let count = 0;
+        let sum = 0;
+        for (let i = 0; i < cartState.length; i++) {
+            sum = sum + Number(cartState[i].price * cartState[i].quantity)
+            count = count + 1
+            setTotalPrice(sum)
+            setCartQuantity(count)
+        }
+    },[cartState])
 
     const logoutUser = () => {
         dispatch(logout());
@@ -106,9 +121,12 @@ const Header = () => {
                                     <Link to="/cart" className="d-flex align-items-center gap-10 text-white">
                                         <IoCartOutline className="header-icon cart-icon" />
                                         <div className="d-flex flex-column gap-10">
-                                            <span className="badge bg-white text-dark">0</span>
+                                            <div>
+
+                                            <span className="badge bg-white text-dark">{cartQuantity ? cartQuantity : 0}</span>
+                                            </div>
                                             <p className="mb-0 header-upper-text">
-                                                0 <sup>đ</sup>
+                                                {totalPrice ? totalPrice : 0} <sup>đ</sup>
                                             </p>
                                         </div>
                                     </Link>

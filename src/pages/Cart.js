@@ -9,6 +9,7 @@ import { getCart, removeProdCart, updateCart } from '../features/auth/authSlice'
 import { useState } from 'react';
 const Cart = () => {
     const [cartData, setCartData] = useState(null);
+    const [totalPrice, setTotalPrice] = useState(null);
     const dispatch = useDispatch();
     const cartState = useSelector((state) => state.auth.cart);
     useEffect(() => {
@@ -16,18 +17,28 @@ const Cart = () => {
     }, [dispatch]);
     useEffect(() => {
         if (cartData !== null) {
-            dispatch(updateCart(cartData));
-            setTimeout(() => {
-                dispatch(getCart());
-            }, 200);
+            if (cartData.quantity !== '' && cartData.quantity <= 10) {
+                dispatch(updateCart(cartData));
+                setTimeout(() => {
+                    dispatch(getCart());
+                }, 200);
+            }
         }
     }, [cartData, dispatch]);
+    useEffect(() => {
+        let sum = 0;
+        for (let i = 0; i < cartState.length; i++) {
+            sum = sum + Number(cartState[i].price * cartState[i].quantity);
+            setTotalPrice(sum);
+        }
+    }, [cartState]);
     const removePCart = (id) => {
         dispatch(removeProdCart(id));
         setTimeout(() => {
             dispatch(getCart());
         }, 200);
     };
+
     return (
         <>
             <Meta title={'Giỏ hàng'} />
@@ -80,7 +91,8 @@ const Cart = () => {
                                                     className="form-control"
                                                     min={1}
                                                     max={10}
-                                                    value={cartData?.quantity ? cartData?.quantity : item?.quantity}
+                                                    maxLength={2}
+                                                    value={item?.quantity}
                                                     onChange={(e) =>
                                                         setCartData({ id: item?._id, quantity: e.target.value })
                                                     }
@@ -113,7 +125,8 @@ const Cart = () => {
                                 </div>
                                 <div className="d-flex flex-column align-items-end">
                                     <h4>
-                                        Tổng tiền giỏ hàng: 100000<sup>đ</sup>
+                                        Tổng tiền giỏ hàng: {totalPrice ? totalPrice : 0}
+                                        <sup>đ</sup>
                                     </h4>
                                     <p>Thuế và phí vận chuyển được tính khi thanh toán</p>
                                     <Link to="/checkout" className="button">

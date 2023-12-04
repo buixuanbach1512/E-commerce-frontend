@@ -57,6 +57,20 @@ const updateQuantityCart = async (cartData) => {
     }
 };
 
+const createOrder = async (orderData) => {
+    const response = await axios.post(`${baseUrl}user/create-order/`, orderData, config);
+    if (response.data) {
+        return response.data;
+    }
+};
+
+const emptyCart = async () => {
+    const response = await axios.delete(`${baseUrl}user/empty-cart/`, config);
+    if (response.data) {
+        return response.data;
+    }
+};
+
 const logout = async () => {
     const response = await axios.post(`${baseUrl}user/logout`);
     if (response.data) {
@@ -72,5 +86,7 @@ export const authService = {
     getCart,
     removeProdCart,
     updateQuantityCart,
+    createOrder,
+    emptyCart,
     logout,
 };
