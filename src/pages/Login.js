@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
-import Meta from '../components/Meta';
-import BreadScumb from '../components/BreadCrumb';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../features/auth/authSlice';
+import { useEffect } from 'react';
 
 const schema = Yup.object().shape({
     email: Yup.string().email('Không phải là email').required('Chưa nhập email'),
@@ -15,6 +14,7 @@ const schema = Yup.object().shape({
 const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const userState = useSelector((state) => state.auth.user);
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -25,22 +25,18 @@ const Login = () => {
             dispatch(login(values));
         },
     });
-    const authState = useSelector((state) => state.auth);
-    const { user, isSuccess } = authState;
     useEffect(() => {
-        if (user !== null || isSuccess) {
+        if (userState !== null) {
             setTimeout(() => {
                 navigate('/');
                 navigate(0);
-            }, 1000);
+            }, 2000);
         } else {
             navigate('/login');
         }
-    }, [user, isSuccess, navigate]);
+    }, [navigate, userState]);
     return (
         <>
-            <Meta title={'Đăng Nhập'} />
-            <BreadScumb title={'Đăng nhập'} />
             <div className="login-wrapper home-wrapper-2 py-5">
                 <div className="row">
                     <div className="col-12">

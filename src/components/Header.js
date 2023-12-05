@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { BsSearch } from 'react-icons/bs';
 import { FaBars } from 'react-icons/fa';
 import { FaTimes } from 'react-icons/fa';
@@ -11,28 +11,35 @@ import { getAllCategory } from '../features/category/categorySlice';
 import { getCart, logout } from '../features/auth/authSlice';
 
 const Header = () => {
+    const user = sessionStorage.getItem('customer') ? JSON.parse(sessionStorage.getItem('customer')) : null;
     const dispatch = useDispatch();
-    const customer = sessionStorage.getItem('customer') ? JSON.parse(sessionStorage.getItem('customer')) : null;
     const [navMenu, setnavMenu] = useState(false);
     const [totalPrice, setTotalPrice] = useState(null);
-    const [cartQuantity, setCartQuantity] = useState(0)
+    const [cartQuantity, setCartQuantity] = useState(0);
+    const authState = useSelector((state) => state.auth);
     const categoryState = useSelector((state) => state.category.categories);
     const cartState = useSelector((state) => state.auth.cart);
+    const getUserCart = () => {
+        if (user !== null) {
+            dispatch(getCart());
+        }
+    };
     useEffect(() => {
         dispatch(getAllCategory());
-        dispatch(getCart())
+        getUserCart();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch]);
 
-    useEffect(()=>{
+    useEffect(() => {
         let count = 0;
         let sum = 0;
         for (let i = 0; i < cartState.length; i++) {
-            sum = sum + Number(cartState[i].price * cartState[i].quantity)
-            count = count + 1
-            setTotalPrice(sum)
-            setCartQuantity(count)
+            sum = sum + Number(cartState[i].price * cartState[i].quantity);
+            count = count + 1;
+            setTotalPrice(sum);
+            setCartQuantity(count);
         }
-    },[cartState])
+    }, [cartState]);
 
     const logoutUser = () => {
         dispatch(logout());
@@ -81,10 +88,7 @@ const Header = () => {
                         <div className="col-4">
                             <div className="header-upper-links d-flex align-items-center justify-content-end gap-15">
                                 <div className="nav-links">
-                                    <Link
-                                        className="d-flex align-items-center gap-10 text-white"
-                                        to={customer !== null ? '/wishlist' : ''}
-                                    >
+                                    <Link className="d-flex align-items-center gap-10 text-white" to="/wishlist">
                                         <IoHeartOutline className="header-icon" />
                                         <p className="mb-0 header-upper-text">
                                             Danh sách
@@ -94,16 +98,16 @@ const Header = () => {
                                     </Link>
                                 </div>
                                 <div className="nav-links">
-                                    {customer !== null ? (
+                                    {authState && authState?.user !== null ? (
                                         <button
                                             className="d-flex align-items-center gap-10 text-white bg-transparent border-0"
                                             onClick={() => logoutUser()}
                                         >
                                             <CiUser className="header-icon" />
                                             <p className="mb-0 header-upper-text">
-                                                {customer.name}
+                                                Chào mừng
                                                 <br />
-                                                Đăng Xuất
+                                                {authState?.user?.name}
                                             </p>
                                         </button>
                                     ) : (
@@ -122,8 +126,9 @@ const Header = () => {
                                         <IoCartOutline className="header-icon cart-icon" />
                                         <div className="d-flex flex-column gap-10">
                                             <div>
-
-                                            <span className="badge bg-white text-dark">{cartQuantity ? cartQuantity : 0}</span>
+                                                <span className="badge bg-white text-dark">
+                                                    {cartQuantity ? cartQuantity : 0}
+                                                </span>
                                             </div>
                                             <p className="mb-0 header-upper-text">
                                                 {totalPrice ? totalPrice : 0} <sup>đ</sup>
@@ -166,10 +171,11 @@ const Header = () => {
 
                                 <div className="menu-links">
                                     <div className="d-flex align-items-center gap-15">
-                                        <Link to="/">Home</Link>
-                                        <Link to="/store">Cửa Hàng</Link>
-                                        <Link to="/">Blogs</Link>
-                                        <Link to="/contact">Liên Hệ</Link>
+                                        <NavLink to="/">Trang chủ</NavLink>
+                                        <NavLink to="/store">Cửa Hàng</NavLink>
+                                        <NavLink to="/blog">Blogs</NavLink>
+                                        <NavLink to="/contact">Liên Hệ</NavLink>
+                                        <NavLink to="/order">Đơn hàng</NavLink>
                                     </div>
                                 </div>
                                 <FaBars className="nav-button" onClick={() => setnavMenu(true)} />

@@ -1,7 +1,6 @@
-import axios from 'axios';
-import { baseUrl } from '../../utils/baseUrl';
+import axios from '../../utils/axiosConfig';
 const getAllColor = async () => {
-    const response = await axios.get(`${baseUrl}color/`);
+    const response = await axios.get(`color/`);
     if (response) {
         return response.data;
     }

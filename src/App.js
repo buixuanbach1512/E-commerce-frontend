@@ -14,6 +14,9 @@ import Product from './pages/Product';
 import ScrollToTop from './utils/ScrollToTop';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
+import { PrivateRoutes } from './routes/PrivateRoutes';
+import { OpenRoutes } from './routes/OpenRoutes';
+import Order from './pages/Order';
 
 function App() {
     return (
@@ -23,15 +26,58 @@ function App() {
                     <Routes forceRefresh={true}>
                         <Route path="/" element={<Layout />}>
                             <Route index element={<Home />} />
+                            <Route
+                                path="signup"
+                                element={
+                                    <OpenRoutes>
+                                        <SignUp />
+                                    </OpenRoutes>
+                                }
+                            />
+                            <Route
+                                path="login"
+                                element={
+                                    <OpenRoutes>
+                                        <Login />
+                                    </OpenRoutes>
+                                }
+                            />
+                            <Route
+                                path="wishlist"
+                                element={
+                                    <PrivateRoutes>
+                                        <WishList />
+                                    </PrivateRoutes>
+                                }
+                            />
+                            <Route path="store" element={<Store />} />
+                            <Route path="product/:id" element={<Product />} />
+                            <Route
+                                path="cart"
+                                element={
+                                    <PrivateRoutes>
+                                        <Cart />
+                                    </PrivateRoutes>
+                                }
+                            />
+                            <Route
+                                path="checkout"
+                                element={
+                                    <PrivateRoutes>
+                                        <Checkout />
+                                    </PrivateRoutes>
+                                }
+                            />
+                            <Route
+                                path="order"
+                                element={
+                                    <PrivateRoutes>
+                                        <Order />
+                                    </PrivateRoutes>
+                                }
+                            />
                             <Route path="about" element={<About />} />
                             <Route path="contact" element={<Contact />} />
-                            <Route path="store" element={<Store />} />
-                            <Route path="cart" element={<Cart />} />
-                            <Route path="checkout" element={<Checkout />} />
-                            <Route path="product/:id" element={<Product />} />
-                            <Route path="wishlist" element={<WishList />} />
-                            <Route path="login" element={<Login />} />
-                            <Route path="signup" element={<SignUp />} />
                             <Route path="forgot-password" element={<ForgotPassword />} />
                         </Route>
                     </Routes>

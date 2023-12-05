@@ -98,6 +98,10 @@ input[type='number'].sign-up::-webkit-outer-spin-button {
     letter-spacing: 0.3;
     text-transform: uppercase;
 }
+.header-bottom .menu-links a.active {
+    font-weight: 500;
+    color: var(--color-febd69);
+}
 .header-bottom .dropdown button::before {
     content: url('../public/images/menu.svg');
 }
@@ -173,6 +177,38 @@ input[type='number'].sign-up::-webkit-outer-spin-button {
     right: 1rem;
 }
 /* End Heaer */
+
+/* Login Page */
+
+.auth-card {
+    padding: 20px;
+    background-color: white;
+    width: 500px;
+    margin: 30px auto;
+}
+.auth-card h3 {
+    /* font-size: 19px; */
+    font-weight: 500;
+    color: var(--color-777777);
+}
+.auth-card .form-control {
+    height: 50px;
+    background-color: var(--color-f5f5f7);
+    color: var(--color-777777);
+    /* font-size: 14px; */
+    border-radius: 10px;
+    border-color: transparent;
+}
+.auth-card a {
+    /* font-size: 14px; */
+    font-weight: 400;
+}
+.auth-card p {
+    /* font-size: 13px; */
+    color: var(--color-777777);
+}
+
+/* End Login Page */
 
 /* Home Page */
 
@@ -471,33 +507,7 @@ filter-card .form-check-label {
 .grid img:hover {
     cursor: pointer;
 }
-.auth-card {
-    padding: 20px;
-    background-color: white;
-    width: 500px;
-    margin: 30px auto;
-}
-.auth-card h3 {
-    /* font-size: 19px; */
-    font-weight: 500;
-    color: var(--color-777777);
-}
-.auth-card .form-control {
-    height: 50px;
-    background-color: var(--color-f5f5f7);
-    color: var(--color-777777);
-    /* font-size: 14px; */
-    border-radius: 10px;
-    border-color: transparent;
-}
-.auth-card a {
-    /* font-size: 14px; */
-    font-weight: 400;
-}
-.auth-card p {
-    /* font-size: 13px; */
-    color: var(--color-777777);
-}
+
 /* End Home Page */
 
 /* Wish List Page */
@@ -709,6 +719,27 @@ filter-card .form-check-label {
 }
 
 /* End Check Out Page */
+
+/* Order Page */
+
+.table-title {
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    color: var(--color-f5f5f7);
+    background-color: var(--color-232f3e);
+}
+.table-data {
+    background-color: var(--color-febd69);
+}
+.table-data p.order-data {
+    padding: 10px 0;
+    margin-bottom: 0;
+}
+.table-prod {
+    background-color: white;
+}
+
+/* End Order Page */
 
 /* Footer */
 

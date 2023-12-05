@@ -1,19 +1,17 @@
-import axios from 'axios';
-import { baseUrl } from '../../utils/baseUrl';
-import { config } from '../../utils/axiosConfig';
+import axios from '../../utils/axiosConfig';
 
 const getAllProduct = async () => {
-    const response = await axios.get(`${baseUrl}product/`);
+    const response = await axios.get(`product/`);
     return response.data;
 };
 
 const getAProduct = async (prodId) => {
-    const response = await axios.get(`${baseUrl}product/${prodId}`);
+    const response = await axios.get(`product/${prodId}`);
     return response.data;
 };
 
 const addToWishList = async (prodId) => {
-    const response = await axios.put(`${baseUrl}product/wishlist`, { prodId }, config);
+    const response = await axios.put(`product/wishlist`, { prodId });
     return response.data;
 };
 

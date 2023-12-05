@@ -1,7 +1,6 @@
-import axios from 'axios';
-import { baseUrl } from '../../utils/baseUrl';
+import axios from '../../utils/axiosConfig';
 const getAllCategory = async () => {
-    const response = await axios.get(`${baseUrl}category/`);
+    const response = await axios.get(`category/`);
     if (response) {
         return response.data;
     }

@@ -8,7 +8,6 @@ const getUserfromSessionStorage = sessionStorage.getItem('customer')
 
 const initialState = {
     user: getUserfromSessionStorage,
-    wishList: '',
     cart: [],
     isLoading: false,
     isSuccess: false,
@@ -88,6 +87,14 @@ export const emptyCart = createAsyncThunk('auth/emptycart', async (thunkAPI) => 
     }
 });
 
+export const userOrder = createAsyncThunk('auth/order', async (thunkAPI) => {
+    try {
+        return await authService.userOrder();
+    } catch (e) {
+        return thunkAPI.rejectWithValue(e);
+    }
+});
+
 export const logout = createAsyncThunk('auth/logout', async (thunkAPI) => {
     try {
         return await authService.logout();
@@ -134,7 +141,6 @@ export const authSlice = createSlice({
                 state.isSuccess = true;
                 state.user = action.payload;
                 if (state.isSuccess === true) {
-                    sessionStorage.setItem('token', action.payload.token);
                     toast.success('Đăng nhập thành công!');
                 }
             })
@@ -271,6 +277,21 @@ export const authSlice = createSlice({
                 state.empCart = action.payload;
             })
             .addCase(emptyCart.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.isSuccess = false;
+                state.message = action.error;
+            })
+            .addCase(userOrder.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(userOrder.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isError = false;
+                state.isSuccess = true;
+                state.orders = action.payload;
+            })
+            .addCase(userOrder.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.isSuccess = false;

@@ -1,8 +1,7 @@
-import axios from 'axios';
-import { baseUrl } from '../../utils/baseUrl';
+import axios from '../../utils/axiosConfig';
 
 const postContact = async (dataPost) => {
-    const response = await axios.post(`${baseUrl}contact/`, dataPost);
+    const response = await axios.post(`contact/`, dataPost);
     return response.data;
 };
 
