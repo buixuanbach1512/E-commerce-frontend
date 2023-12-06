@@ -3,21 +3,30 @@ import BreadCrumb from '../components/BreadCrumb';
 import Meta from '../components/Meta';
 import ProductCard from '../components/ProductCard';
 import ReactStars from 'react-rating-stars-component';
+import StarRatings from 'react-star-ratings';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ReactImageZoom from 'react-image-zoom';
 import Color from '../components/Color';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { getAProduct, getAllProduct } from '../features/product/productSlice';
+import { getAProduct, getAllProduct, rating } from '../features/product/productSlice';
 import { toast } from 'react-toastify';
 import { addToCart, getCart } from '../features/auth/authSlice';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
+
+const schema = Yup.object().shape({
+    comment: Yup.string().required('Chưa viết đánh giá!!'),
+});
 
 const Product = () => {
+    const user = sessionStorage.getItem('customer');
     const [quantity, setQuantity] = useState(1);
     const [color, setColor] = useState(null);
     const [added, setAdded] = useState(false);
     const [border, setBorder] = useState(null);
+    const [star, setStar] = useState(0);
     const location = useLocation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -28,8 +37,10 @@ const Product = () => {
     useEffect(() => {
         dispatch(getAProduct(productId));
         dispatch(getAllProduct());
-        dispatch(getCart());
-    }, [dispatch, productId]);
+        if (user) {
+            dispatch(getCart());
+        }
+    }, [dispatch, productId, user]);
     useEffect(() => {
         for (let i = 0; i < getCartState.length; i++) {
             if (productId === getCartState[i].prodId._id) {
@@ -55,9 +66,30 @@ const Product = () => {
             };
             dispatch(addToCart(data));
             setTimeout(() => {
-                navigate('/cart')
+                navigate('/cart');
             }, 2000);
         }
+    };
+    const formik = useFormik({
+        initialValues: {
+            comment: '',
+        },
+        validationSchema: schema,
+        onSubmit: (values) => {
+            const data = {
+                star: star,
+                prodId: productId,
+                comment: values.comment,
+            };
+            dispatch(rating(data));
+            setTimeout(() => {
+                dispatch(getAProduct(productId));
+                formik.resetForm();
+            }, 200);
+        },
+    });
+    const ratingChanged = (newRating) => {
+        setStar(newRating);
     };
     return (
         <>
@@ -91,14 +123,15 @@ const Product = () => {
                                         <sup>đ</sup>
                                     </p>
                                     <div className="d-flex align-items-center gap-10">
-                                        <ReactStars
-                                            count={5}
-                                            size={24}
-                                            value={prodState?.totalRating}
-                                            edit={false}
-                                            activeColor="#ffd700"
+                                        <StarRatings
+                                            rating={prodState?.totalRating}
+                                            starRatedColor="#ffd700"
+                                            numberOfStars={5}
+                                            starDimension="20px"
+                                            starSpacing="1px"
+                                            name="rating"
                                         />
-                                        <p className="text-review mb-0">( 2 đánh giá )</p>
+                                        <p className="text-review mb-0">( {prodState?.ratings.length} đánh giá )</p>
                                     </div>
                                     <a className="review-btn" href="#review">
                                         Đánh giá sản phẩm
@@ -224,14 +257,15 @@ const Product = () => {
                                     <div>
                                         <h4 className="mb-2">Khách hàng đánh giá</h4>
                                         <div className="d-flex gap-10 align-items-center">
-                                            <ReactStars
-                                                count={5}
-                                                size={24}
-                                                value={3}
-                                                edit={false}
-                                                activeColor="#ffd700"
+                                            <StarRatings
+                                                rating={prodState?.totalRating}
+                                                starRatedColor="#ffd700"
+                                                numberOfStars={5}
+                                                starDimension="20px"
+                                                starSpacing="1px"
+                                                name="rating"
                                             />
-                                            <p className="mb-0">Dựa trên 2 đánh giá</p>
+                                            <p className="mb-0">Dựa trên {prodState?.ratings.length} đánh giá</p>
                                         </div>
                                     </div>
                                     <div>
@@ -242,14 +276,16 @@ const Product = () => {
                                 </div>
                                 <div className="review-form py-4">
                                     <h4>Viết đánh giá của bạn</h4>
-                                    <form action="" className="d-flex flex-column gap-15">
+                                    <form onSubmit={formik.handleSubmit} className="d-flex flex-column gap-15">
                                         <div>
-                                            <ReactStars
-                                                count={5}
-                                                size={24}
-                                                value={3}
-                                                edit={true}
-                                                activeColor="#ffd700"
+                                            <StarRatings
+                                                rating={star}
+                                                changeRating={ratingChanged}
+                                                starRatedColor="#ffd700"
+                                                numberOfStars={5}
+                                                starDimension="20px"
+                                                starSpacing="1px"
+                                                name="rating"
                                             />
                                         </div>
                                         <div>
@@ -258,7 +294,13 @@ const Product = () => {
                                                 cols="30"
                                                 rows="4"
                                                 placeholder="Nhận xét"
+                                                onChange={formik.handleChange('comment')}
+                                                onBlur={formik.handleBlur('comment')}
+                                                value={formik.values.comment}
                                             ></textarea>
+                                            <div className="input-err text-danger">
+                                                {formik.touched.comment && formik.errors.comment}
+                                            </div>
                                         </div>
                                         <div className="d-flex justify-content-end">
                                             <button type="submit" className="button border-0">
@@ -267,24 +309,25 @@ const Product = () => {
                                         </div>
                                     </form>
                                 </div>
-                                <div className="reviews mt-4">
+                                <div className="reviews">
                                     <div className="review">
-                                        <div className="d-flex gap-10 align-items-center">
-                                            <h5 className="mb-0">Bach</h5>
-                                            <ReactStars
-                                                count={5}
-                                                size={24}
-                                                value={3}
-                                                edit={false}
-                                                activeColor="#ffd700"
-                                            />
-                                        </div>
-                                        <p className="mt-3">
-                                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sapiente nemo
-                                            tempore ratione, incidunt fuga eligendi iure magni vero dolorum vitae
-                                            ducimus dicta laborum labore neque veritatis aspernatur natus rerum
-                                            voluptatem?
-                                        </p>
+                                        {prodState &&
+                                            prodState?.ratings?.map((item, index) => (
+                                                <div key={index} className="border-bottom mt-3">
+                                                    <div className="d-flex gap-10 align-items-center">
+                                                        <h6 className="mb-0">{item?.postedBy?.name}</h6>
+                                                        <StarRatings
+                                                            rating={item?.star}
+                                                            starRatedColor="#ffd700"
+                                                            numberOfStars={5}
+                                                            starDimension="20px"
+                                                            starSpacing="1px"
+                                                            name="rating"
+                                                        />
+                                                    </div>
+                                                    <p className="mt-3">{item?.comment}</p>
+                                                </div>
+                                            ))}
                                     </div>
                                 </div>
                             </div>

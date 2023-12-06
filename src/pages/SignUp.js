@@ -87,7 +87,7 @@ const SignUp = () => {
                                 </div>
                                 <div className="mt-1">
                                     <input
-                                        type="number"
+                                        type="text"
                                         onChange={formik.handleChange('mobile')}
                                         onBlur={formik.handleBlur('mobile')}
                                         value={formik.values.mobile}

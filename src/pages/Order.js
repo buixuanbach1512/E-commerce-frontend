@@ -8,7 +8,6 @@ import { userOrder } from '../features/auth/authSlice';
 const Order = () => {
     const dispatch = useDispatch();
     const orderState = useSelector((state) => state?.auth?.orders);
-    console.log(orderState);
     useEffect(() => {
         dispatch(userOrder());
     }, [dispatch]);
@@ -36,6 +35,11 @@ const Order = () => {
                             </div>
                         </div>
                         <div className="col-12">
+                            {orderState?.length === 0 && (
+                                <div className="py-5">
+                                    <h2 className="text-center text-secondary">Chưa có đơn hàng nào!!</h2>
+                                </div>
+                            )}
                             {orderState &&
                                 orderState?.map((item, index) => (
                                     <div key={index} className="row table-data">

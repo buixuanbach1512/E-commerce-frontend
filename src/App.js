@@ -17,6 +17,8 @@ import Checkout from './pages/Checkout';
 import { PrivateRoutes } from './routes/PrivateRoutes';
 import { OpenRoutes } from './routes/OpenRoutes';
 import Order from './pages/Order';
+import Profile from './pages/Profile';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
     return (
@@ -79,6 +81,15 @@ function App() {
                             <Route path="about" element={<About />} />
                             <Route path="contact" element={<Contact />} />
                             <Route path="forgot-password" element={<ForgotPassword />} />
+                            <Route
+                                path="my-profile/:id"
+                                element={
+                                    <PrivateRoutes>
+                                        <Profile />
+                                    </PrivateRoutes>
+                                }
+                            />
+                            <Route path="reset-password/:token" element={<ResetPassword />} />
                         </Route>
                     </Routes>
                 </ScrollToTop>

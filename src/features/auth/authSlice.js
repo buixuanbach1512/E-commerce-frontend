@@ -39,6 +39,38 @@ export const getUserWishList = createAsyncThunk('auth/get-wishlist', async (thun
     }
 });
 
+export const getAUser = createAsyncThunk('auth/get-a-user', async (userId, thunkAPI) => {
+    try {
+        return await authService.getAUser(userId);
+    } catch (e) {
+        return thunkAPI.rejectWithValue(e);
+    }
+});
+
+export const updateUser = createAsyncThunk('auth/update-user', async (userData, thunkAPI) => {
+    try {
+        return await authService.updateUser(userData);
+    } catch (e) {
+        return thunkAPI.rejectWithValue(e);
+    }
+});
+
+export const forgotPassToken = createAsyncThunk('auth/forgot-password-token', async (data, thunkAPI) => {
+    try {
+        return await authService.forgotPassToken(data);
+    } catch (e) {
+        return thunkAPI.rejectWithValue(e);
+    }
+});
+
+export const resetPassword = createAsyncThunk('auth/reset-password', async (data, thunkAPI) => {
+    try {
+        return await authService.resetPassword(data);
+    } catch (e) {
+        return thunkAPI.rejectWithValue(e);
+    }
+});
+
 export const addToCart = createAsyncThunk('auth/add-to-cart', async (dataCart, thunkAPI) => {
     try {
         return await authService.addToCart(dataCart);
@@ -167,6 +199,84 @@ export const authSlice = createSlice({
                 state.isError = true;
                 state.isSuccess = false;
                 state.message = action.error;
+            })
+            .addCase(getAUser.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getAUser.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isError = false;
+                state.isSuccess = true;
+                state.getUser = action.payload;
+            })
+            .addCase(getAUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.isSuccess = false;
+                state.message = action.error;
+            })
+            .addCase(updateUser.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(updateUser.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isError = false;
+                state.isSuccess = true;
+                state.updatedUser = action.payload;
+                if (state.isSuccess === true) {
+                    toast.success('Cập nhật thành công');
+                }
+            })
+            .addCase(updateUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.isSuccess = false;
+                state.message = action.error;
+                if (state.isError === true) {
+                    toast.error('Cập nhật thất bại');
+                }
+            })
+            .addCase(forgotPassToken.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(forgotPassToken.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isError = false;
+                state.isSuccess = true;
+                state.forgotPassToken = action.payload;
+                if (state.isSuccess === true) {
+                    toast.success('Gửi yêu cầu thành công');
+                }
+            })
+            .addCase(forgotPassToken.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.isSuccess = false;
+                state.message = action.error;
+                if (state.isError === true) {
+                    toast.error('Đã có lỗi xảy ra');
+                }
+            })
+            .addCase(resetPassword.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(resetPassword.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isError = false;
+                state.isSuccess = true;
+                state.resetedPassword = action.payload;
+                if (state.isSuccess === true) {
+                    toast.success('Làm mới mật khẩu thành công');
+                }
+            })
+            .addCase(resetPassword.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.isSuccess = false;
+                state.message = action.error;
+                if (state.isError === true) {
+                    toast.error('Đã có lỗi xảy ra');
+                }
             })
             .addCase(addToCart.pending, (state) => {
                 state.isLoading = true;

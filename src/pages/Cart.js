@@ -9,7 +9,7 @@ import { getCart, removeProdCart, updateCart } from '../features/auth/authSlice'
 import { useState } from 'react';
 const Cart = () => {
     const [cartData, setCartData] = useState(null);
-    const [totalPrice, setTotalPrice] = useState(null);
+    const [totalPrice, setTotalPrice] = useState(0);
     const dispatch = useDispatch();
     const cartState = useSelector((state) => state.auth.cart);
     useEffect(() => {
@@ -30,6 +30,9 @@ const Cart = () => {
         for (let i = 0; i < cartState.length; i++) {
             sum = sum + Number(cartState[i].price * cartState[i].quantity);
             setTotalPrice(sum);
+        }
+        if (cartState.length === 0) {
+            setTotalPrice(0);
         }
     }, [cartState]);
     const removePCart = (id) => {
@@ -53,6 +56,11 @@ const Cart = () => {
                                 <h4 className="cart-col-3">Số lượng</h4>
                                 <h4 className="cart-col-4">Tổng tiền</h4>
                             </div>
+                            {cartState?.length === 0 && (
+                                <div className="py-5">
+                                    <h2 className="text-center text-secondary">Giỏ hàng trống!!</h2>
+                                </div>
+                            )}
                             {cartState &&
                                 cartState?.map((item, index) => (
                                     <div
@@ -125,7 +133,7 @@ const Cart = () => {
                                 </div>
                                 <div className="d-flex flex-column align-items-end">
                                     <h4>
-                                        Tổng tiền giỏ hàng: {totalPrice ? totalPrice : 0}
+                                        Tổng tiền giỏ hàng: {totalPrice}
                                         <sup>đ</sup>
                                     </h4>
                                     <p>Thuế và phí vận chuyển được tính khi thanh toán</p>

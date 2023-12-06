@@ -28,7 +28,7 @@ const WishList = () => {
                     <div className="row">
                         {wishListState?.length === 0 && (
                             <div className="py-5">
-                                <h2 className="text-center">Chưa có sản phẩm yêu thích!!</h2>
+                                <h2 className="text-center text-secondary">Chưa có sản phẩm yêu thích!!</h2>
                             </div>
                         )}
                         {wishListState?.map((item) => (

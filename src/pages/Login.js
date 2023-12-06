@@ -29,8 +29,8 @@ const Login = () => {
         if (userState !== null) {
             setTimeout(() => {
                 navigate('/');
-                navigate(0);
-            }, 2000);
+                window.location.reload();
+            }, 1000);
         } else {
             navigate('/login');
         }

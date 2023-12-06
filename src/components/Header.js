@@ -8,27 +8,26 @@ import { IoHeartOutline } from 'react-icons/io5';
 import { IoCartOutline } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategory } from '../features/category/categorySlice';
-import { getCart, logout } from '../features/auth/authSlice';
+import { getAUser, getCart } from '../features/auth/authSlice';
 
 const Header = () => {
-    const user = sessionStorage.getItem('customer') ? JSON.parse(sessionStorage.getItem('customer')) : null;
+    const user = sessionStorage.getItem('customer');
     const dispatch = useDispatch();
     const [navMenu, setnavMenu] = useState(false);
     const [totalPrice, setTotalPrice] = useState(null);
     const [cartQuantity, setCartQuantity] = useState(0);
     const authState = useSelector((state) => state.auth);
+    const userState = useSelector((state) => state.auth.getUser);
     const categoryState = useSelector((state) => state.category.categories);
     const cartState = useSelector((state) => state.auth.cart);
-    const getUserCart = () => {
-        if (user !== null) {
-            dispatch(getCart());
-        }
-    };
+    const userId = authState?.user?._id;
     useEffect(() => {
         dispatch(getAllCategory());
-        getUserCart();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch]);
+        if (user) {
+            dispatch(getAUser(userId));
+            dispatch(getCart());
+        }
+    }, [dispatch, user, userId]);
 
     useEffect(() => {
         let count = 0;
@@ -39,10 +38,14 @@ const Header = () => {
             setTotalPrice(sum);
             setCartQuantity(count);
         }
+        if (cartState.length === 0) {
+            setTotalPrice(sum);
+            setCartQuantity(count);
+        }
     }, [cartState]);
-
-    const logoutUser = () => {
-        dispatch(logout());
+    const handleLogout = () => {
+        sessionStorage.clear();
+        window.location.reload();
     };
     return (
         <>
@@ -99,17 +102,45 @@ const Header = () => {
                                 </div>
                                 <div className="nav-links">
                                     {authState && authState?.user !== null ? (
-                                        <button
-                                            className="d-flex align-items-center gap-10 text-white bg-transparent border-0"
-                                            onClick={() => logoutUser()}
-                                        >
-                                            <CiUser className="header-icon" />
-                                            <p className="mb-0 header-upper-text">
-                                                Chào mừng
-                                                <br />
-                                                {authState?.user?.name}
-                                            </p>
-                                        </button>
+                                        <div className="btn-group">
+                                            <button
+                                                className="btn dropdown-toggle d-flex align-items-center gap-10 text-white bg-transparent border-0"
+                                                type="button"
+                                                id="dropdownMenuButton1"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                            >
+                                                <CiUser className="header-icon" />
+                                                <p className="mb-0 header-upper-text">
+                                                    Chào mừng
+                                                    <br />
+                                                    {userState && userState?.name}
+                                                </p>
+                                            </button>
+                                            <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                <li>
+                                                    <Link
+                                                        className="dropdown-item text-dark"
+                                                        to={`/my-profile/${authState?.user?._id}`}
+                                                    >
+                                                        Thông tin cá nhân
+                                                    </Link>
+                                                </li>
+                                                <li>
+                                                    <Link to="/change-password" className="dropdown-item text-dark">
+                                                        Đổi mật khẩu
+                                                    </Link>
+                                                </li>
+                                                <li>
+                                                    <Link
+                                                        className="dropdown-item text-dark"
+                                                        onClick={() => handleLogout()}
+                                                    >
+                                                        Đăng xuất
+                                                    </Link>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     ) : (
                                         <Link className="d-flex align-items-center gap-10 text-white" to="/login">
                                             <CiUser className="header-icon" />
@@ -149,7 +180,7 @@ const Header = () => {
                                 <div>
                                     <div className="dropdown">
                                         <button
-                                            className="btn btn-secondary dropdown-toggle bg-transparent border-0 d-flex align-items-center gap-15"
+                                            className="btn dropdown-toggle bg-transparent border-0 d-flex align-items-center gap-15"
                                             type="button"
                                             id="dropdownMenuButton1"
                                             data-bs-toggle="dropdown"

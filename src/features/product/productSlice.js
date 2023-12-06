@@ -1,5 +1,6 @@
-import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { productService } from './productService';
+import { toast } from 'react-toastify';
 const initialState = {
     products: [],
     isLoading: false,
@@ -31,7 +32,13 @@ export const addToWishList = createAsyncThunk('product/add-to-wishlist', async (
     }
 });
 
-export const resetState = createAction('resetAll');
+export const rating = createAsyncThunk('product/rating', async (data, thunkAPI) => {
+    try {
+        return await productService.rating(data);
+    } catch (e) {
+        return thunkAPI.rejectWithValue(e);
+    }
+});
 
 export const productSlice = createSlice({
     name: 'product',
@@ -84,7 +91,27 @@ export const productSlice = createSlice({
                 state.isError = true;
                 state.message = action.error;
             })
-            .addCase(resetState, () => initialState);
+            .addCase(rating.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(rating.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.isError = false;
+                state.rated = action.payload;
+                if (state.isSuccess === true) {
+                    toast.success('Đánh giá sản phẩm thành công');
+                }
+            })
+            .addCase(rating.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
+                state.message = action.error;
+                if (state.isError === true) {
+                    toast.error('Đã có lỗi xảy ra');
+                }
+            });
     },
 });
 

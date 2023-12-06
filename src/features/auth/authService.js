@@ -17,6 +17,34 @@ const login = async (userData) => {
     }
 };
 
+const getAUser = async (userId) => {
+    const response = await axios.get(`user/get-user/${userId}`);
+    if (response.data) {
+        return response.data;
+    }
+};
+
+const updateUser = async (userData) => {
+    const response = await axios.put(`user/edit-user`, userData);
+    if (response.data) {
+        return response.data;
+    }
+};
+
+const forgotPassToken = async (data) => {
+    const response = await axios.post(`user/forgot-password-token`, data);
+    if (response.data) {
+        return response.data;
+    }
+};
+
+const resetPassword = async (data) => {
+    const response = await axios.put(`user/reset-password/${data.token}`, data.password);
+    if (response.data) {
+        return response.data;
+    }
+};
+
 const getUserWishList = async () => {
     const response = await axios.get(`user/wishlist`);
     if (response.data) {
@@ -83,6 +111,10 @@ export const authService = {
     register,
     login,
     getUserWishList,
+    getAUser,
+    updateUser,
+    forgotPassToken,
+    resetPassword,
     addToCart,
     getCart,
     removeProdCart,

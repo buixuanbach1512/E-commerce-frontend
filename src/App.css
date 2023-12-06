@@ -86,6 +86,20 @@ input[type='number'].sign-up::-webkit-outer-spin-button {
     width: 35px;
     height: 35px;
 }
+.header-upper .dropdown-menu {
+    background-color: var(--color-f5f5f7);
+    width: 100%;
+    transform: translate3d(0px, 52px, 0px) !important;
+}
+.header-upper .dropdown-item {
+    padding: 10px;
+    margin-bottom: 3px;
+    /* border-bottom: 1px solid var(--color-3b4149); */
+}
+.header-upper .dropdown-item:hover {
+    background-color: var(--color-febd69);
+    color: #333 !important;
+}
 .header-bottom {
     background-color: var(--color-232f3e);
 }
@@ -111,7 +125,7 @@ input[type='number'].sign-up::-webkit-outer-spin-button {
 .header-bottom .dropdown-menu {
     background-color: var(--color-131921);
     width: 100%;
-    transform: translate3d(0px, 52px, 0px) !important;
+    transform: translate3d(0px, 53px, 0px) !important;
 }
 .header-bottom .dropdown-item {
     padding: 20px;
@@ -624,6 +638,7 @@ filter-card .form-check-label {
 }
 .review-btn,
 .text-review {
+    margin-top: 5px;
     font-size: 1.1rem;
     color: var(--color-777777);
 }
@@ -740,6 +755,33 @@ filter-card .form-check-label {
 }
 
 /* End Order Page */
+
+/* Profile Page */
+
+.profile-content {
+    border-radius: 15px;
+}
+
+/* Profile Page */
+
+/* Change Password Page */
+
+.input-password {
+    display: block;
+    position: relative;
+}
+
+.input-password .icon-password {
+    position: absolute;
+    top: 25%;
+    right: 2%;
+    font-size: 1.6rem;
+    color: var(--color-777777);
+    cursor: pointer;
+    text-align: center;
+}
+
+/* End Change Password Page */
 
 /* Footer */
 
