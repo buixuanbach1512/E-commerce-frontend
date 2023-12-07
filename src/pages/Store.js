@@ -1,22 +1,46 @@
 import React, { useEffect, useState } from 'react';
 import BreadCrumb from '../components/BreadCrumb';
 import Meta from '../components/Meta';
-import ReactStars from 'react-rating-stars-component';
 import ProductCard from '../components/ProductCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllProduct } from '../features/product/productSlice';
 import Color from '../components/Color';
 import { getAllColor } from '../features/color/colorSlice';
+import { Link, useSearchParams } from 'react-router-dom';
+import Pagination from '../components/Pagination';
 
 const Store = () => {
     const [grid, setGrid] = useState(3);
+    const [tags, setTags] = useState([]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(8);
+
     const dispatch = useDispatch();
     const productState = useSelector((state) => state.product.products);
+    const categoryState = useSelector((state) => state.category.categories);
+    const [searchParams] = useSearchParams();
+    const queryData = searchParams.get('category') ? searchParams.get('category') : undefined;
+    console.log(categoryState?.category?._id);
+    useEffect(() => {
+        let newTags = [];
+        for (let i = 0; i < productState.length; i++) {
+            const element = productState[i];
+            newTags.push(element.tags);
+        }
+        setTags(newTags);
+    }, [productState]);
+
     const colorState = useSelector((state) => state.color.colors);
     useEffect(() => {
-        dispatch(getAllProduct());
+        dispatch(getAllProduct(queryData));
         dispatch(getAllColor());
-    }, [dispatch]);
+    }, [dispatch, queryData]);
+
+    const lastItemIndex = currentPage * itemsPerPage;
+    const firstItemIndex = lastItemIndex - itemsPerPage;
+    const currentItems = productState && productState.slice(firstItemIndex, lastItemIndex);
+
     return (
         <>
             <Meta title={'Cửa Hàng'} />
@@ -29,10 +53,18 @@ const Store = () => {
                                 <h3 className="filter-title">Mua Hàng Theo Danh Mục</h3>
                                 <div>
                                     <ul className="ps-0">
-                                        <li>Thời Trang Nam</li>
-                                        <li>Thời Trang Nữ</li>
-                                        <li>Thời Trang Trẻ Em</li>
-                                        <li>Thời Trang Công Sở</li>
+                                        {categoryState?.map((item, index) => (
+                                            <li key={index}>
+                                                <Link
+                                                    to={`/store?category=${item._id}`}
+                                                    style={{
+                                                        color: item?._id === queryData ? '#febd69' : '#777777',
+                                                    }}
+                                                >
+                                                    {item?.name}
+                                                </Link>
+                                            </li>
+                                        ))}
                                     </ul>
                                 </div>
                             </div>
@@ -116,63 +148,44 @@ const Store = () => {
                                 <h3 className="filter-title">Tags Sản Phẩm</h3>
                                 <div>
                                     <div className="product-tags d-flex flex-wrap align-items-center gap-10">
-                                        <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                                            Áo thun nam
-                                        </span>
-                                        <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                                            Quần jean
-                                        </span>
-                                        <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                                            Thời trang nữ
-                                        </span>
-                                        <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                                            Thời trang trẻ em
-                                        </span>
+                                        {tags?.map((item, index) => (
+                                            <span
+                                                key={index}
+                                                className="badge bg-light text-secondary rounded-3 py-2 px-3"
+                                            >
+                                                {item}
+                                            </span>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
-                            <div className="filter-card mb-3">
+                            {/* <div className="filter-card mb-3">
                                 <h3 className="filter-title">Sản Phẩm Ngẫu Nhiên</h3>
                                 <div>
-                                    <div className="random-products mb-3 d-flex">
-                                        <div className="w-35">
-                                            <img src="images/watch.jpg" className="img-fluid" alt="watch" />
-                                        </div>
-                                        <div className="w-65">
-                                            <h5>Kid headphones bulk 10 pack multi colored for students</h5>
-                                            <ReactStars
-                                                count={5}
-                                                size={24}
-                                                value={3}
-                                                edit={false}
-                                                activeColor="#ffd700"
-                                            />
+                                    {productState &&
+                                        productState?.slice(1, productState.length)?.map((item, index) => (
+                                            <div className="random-products mb-3 d-flex">
+                                                <div className="w-35">
+                                                    <img src="images/watch.jpg" className="img-fluid" alt="watch" />
+                                                </div>
+                                                <div className="w-65">
+                                                    <h5>{item?.name}</h5>
+                                                    <ReactStars
+                                                        count={5}
+                                                        size={24}
+                                                        value={3}
+                                                        edit={false}
+                                                        activeColor="#ffd700"
+                                                    />
 
-                                            <b>
-                                                100.000<sup>đ</sup>
-                                            </b>
-                                        </div>
-                                    </div>
-                                    <div className="random-products d-flex">
-                                        <div className="w-35">
-                                            <img src="images/watch.jpg" className="img-fluid" alt="watch" />
-                                        </div>
-                                        <div className="w-65">
-                                            <h5>Kid headphones bulk 10 pack multi colored for students</h5>
-                                            <ReactStars
-                                                count={5}
-                                                size={24}
-                                                value={3}
-                                                edit={false}
-                                                activeColor="#ffd700"
-                                            />
-                                            <b>
-                                                100.000<sup>đ</sup>
-                                            </b>
-                                        </div>
-                                    </div>
+                                                    <b>
+                                                        100.000<sup>đ</sup>
+                                                    </b>
+                                                </div>
+                                            </div>
+                                        ))}
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="col-9">
                             <div className="filter-sort-grid mb-4">
@@ -187,7 +200,7 @@ const Store = () => {
                                         </select>
                                     </div>
                                     <div className="d-flex align-items-center gap-10 grid">
-                                        <p className="total-products mb-0">25 sản phẩm</p>
+                                        <p className="total-products mb-0">{productState?.length} sản phẩm</p>
                                         <div className="d-flex gap-10 align-items-center">
                                             <img
                                                 onClick={() => setGrid(3)}
@@ -219,10 +232,16 @@ const Store = () => {
                             </div>
                             <div className="product-list pb-5">
                                 <div className="d-flex flex-wrap">
-                                    {productState?.map((item) => (
+                                    {currentItems?.map((item) => (
                                         <ProductCard key={item._id} item={item} grid={grid} />
                                     ))}
                                 </div>
+                                <Pagination
+                                    totalItems={productState?.length}
+                                    itemsPerPage={itemsPerPage}
+                                    setCurrentPage={setCurrentPage}
+                                    currentPage={currentPage}
+                                />
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import { productService } from './productService';
 import { toast } from 'react-toastify';
 const initialState = {
@@ -8,9 +8,9 @@ const initialState = {
     isError: false,
     message: '',
 };
-export const getAllProduct = createAsyncThunk('product/get-all-product', async (thunkAPI) => {
+export const getAllProduct = createAsyncThunk('product/get-all-product', async (queryData, thunkAPI) => {
     try {
-        return await productService.getAllProduct();
+        return await productService.getAllProduct(queryData);
     } catch (e) {
         return thunkAPI.rejectWithValue(e);
     }
@@ -40,6 +40,8 @@ export const rating = createAsyncThunk('product/rating', async (data, thunkAPI) 
     }
 });
 
+export const resetState = createAction('Reset-all');
+
 export const productSlice = createSlice({
     name: 'product',
     initialState: initialState,
@@ -68,7 +70,7 @@ export const productSlice = createSlice({
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.isError = false;
-                state.addToWL = action.payload;
+                state.addToWl = action.payload;
             })
             .addCase(addToWishList.rejected, (state, action) => {
                 state.isLoading = false;
@@ -111,7 +113,8 @@ export const productSlice = createSlice({
                 if (state.isError === true) {
                     toast.error('Đã có lỗi xảy ra');
                 }
-            });
+            })
+            .addCase(resetState, () => initialState);
     },
 });
 

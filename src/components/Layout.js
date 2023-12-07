@@ -10,20 +10,22 @@ import 'react-toastify/dist/ReactToastify.css';
 const Layout = () => {
     return (
         <>
-            <Header />
-            <Outlet />
-            <ToastContainer
-                position="top-right"
-                autoClose={1000}
-                hideProgressBar={false}
-                newestOnTop={true}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                theme="light"
-            />
-            <Footer />
+            <div>
+                <Header />
+                <Outlet />
+                <ToastContainer
+                    position="top-right"
+                    autoClose={1000}
+                    hideProgressBar={false}
+                    newestOnTop={true}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    theme="light"
+                />
+                <Footer />
+            </div>
         </>
     );
 };

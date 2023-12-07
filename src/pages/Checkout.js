@@ -67,7 +67,7 @@ const Checkout = () => {
         dispatch(createOrder({ shippingInfo, orderItems, totalPrice, totalPriceAfterDiscount: totalPrice }));
         setTimeout(() => {
             dispatch(emptyCart());
-            navigate('/');
+            window.location.reload();
         }, 1000);
     };
     return (

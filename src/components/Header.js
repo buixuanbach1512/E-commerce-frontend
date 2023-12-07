@@ -6,6 +6,7 @@ import { FaTimes } from 'react-icons/fa';
 import { CiUser } from 'react-icons/ci';
 import { IoHeartOutline } from 'react-icons/io5';
 import { IoCartOutline } from 'react-icons/io5';
+import { IoClose } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategory } from '../features/category/categorySlice';
 import { getAUser, getCart } from '../features/auth/authSlice';
@@ -16,10 +17,15 @@ const Header = () => {
     const [navMenu, setnavMenu] = useState(false);
     const [totalPrice, setTotalPrice] = useState(null);
     const [cartQuantity, setCartQuantity] = useState(0);
+
+    const [filteredData, setFilteredData] = useState([]);
+    const [wordEntered, setWordEntered] = useState('');
+
     const authState = useSelector((state) => state.auth);
     const userState = useSelector((state) => state.auth.getUser);
     const categoryState = useSelector((state) => state.category.categories);
     const cartState = useSelector((state) => state.auth.cart);
+    const allProductState = useSelector((state) => state.product.products);
     const userId = authState?.user?._id;
     useEffect(() => {
         dispatch(getAllCategory());
@@ -43,10 +49,45 @@ const Header = () => {
             setCartQuantity(count);
         }
     }, [cartState]);
+
     const handleLogout = () => {
         sessionStorage.clear();
         window.location.reload();
     };
+
+    const handleFilter = (event) => {
+        const searchWord = event.target.value;
+        setWordEntered(searchWord);
+        const newFilter = allProductState?.filter((value) => {
+            return value.name
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/đ/g, 'd')
+                .replace(/Đ/g, 'D')
+                .includes(
+                    searchWord
+                        .toLowerCase()
+                        .normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '')
+                        .replace(/đ/g, 'd')
+                        .replace(/Đ/g, 'D'),
+                );
+        });
+        setFilteredData(newFilter);
+
+        if (searchWord === '') {
+            setFilteredData([]);
+        } else {
+            setFilteredData(newFilter);
+        }
+    };
+
+    const clearInput = () => {
+        setFilteredData([]);
+        setWordEntered('');
+    };
+
     return (
         <>
             <header className="header-top py-3">
@@ -71,22 +112,46 @@ const Header = () => {
                     <div className="row align-items-center">
                         <div className="col-3">
                             <h2>
-                                <Link className="text-white">B SHOP</Link>
+                                <Link to="/" className="text-white">
+                                    B SHOP
+                                </Link>
                             </h2>
                         </div>
-                        <div className="col-5">
+                        <div className="col-5 position-relative">
                             <div className="input-group">
                                 <input
                                     type="text"
-                                    className="form-control py-2"
+                                    className="form-control py-2 input-search border-0"
                                     placeholder="Tìm Kiếm Sản Phẩm ..."
                                     aria-label="Tìm Kiếm Sản Phẩm ..."
                                     aria-describedby="basic-addon2"
+                                    onChange={handleFilter}
+                                    value={wordEntered}
                                 />
-                                <span className="input-group-text p-3" id="basic-addon2">
-                                    <BsSearch className="fs-6" />
-                                </span>
+
+                                {filteredData.length === 0 ? (
+                                    <span className="input-group-text p-3 icon-search" id="basic-addon2">
+                                        <BsSearch className="fs-6" />
+                                    </span>
+                                ) : (
+                                    <span
+                                        className="input-group-text p-3 icon-search"
+                                        id="basic-addon2"
+                                        onClick={clearInput}
+                                    >
+                                        <IoClose className="fs-6" />
+                                    </span>
+                                )}
                             </div>
+                            {filteredData?.length !== 0 && (
+                                <div className="data-result position-absolute">
+                                    {filteredData.map((item, index) => (
+                                        <Link to={`/product/${item?._id}`} key={index} className="data-item">
+                                            <p>{item?.name}</p>
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                         <div className="col-4">
                             <div className="header-upper-links d-flex align-items-center justify-content-end gap-15">
@@ -189,9 +254,12 @@ const Header = () => {
                                             <span className="me-5 d-inline-block">Danh Mục Sản Phẩm</span>
                                         </button>
                                         <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            {categoryState?.map((item) => (
-                                                <li key={item._id}>
-                                                    <Link className="dropdown-item text-white" to="">
+                                            {categoryState?.map((item, index) => (
+                                                <li key={index}>
+                                                    <Link
+                                                        className="dropdown-item text-white"
+                                                        to={`/store?category=${item._id}`}
+                                                    >
                                                         {item.name}
                                                     </Link>
                                                 </li>

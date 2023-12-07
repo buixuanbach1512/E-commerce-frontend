@@ -28,7 +28,6 @@ const Login = () => {
     useEffect(() => {
         if (userState !== null) {
             setTimeout(() => {
-                navigate('/');
                 window.location.reload();
             }, 1000);
         } else {

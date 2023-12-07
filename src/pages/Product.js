@@ -2,7 +2,6 @@ import React from 'react';
 import BreadCrumb from '../components/BreadCrumb';
 import Meta from '../components/Meta';
 import ProductCard from '../components/ProductCard';
-import ReactStars from 'react-rating-stars-component';
 import StarRatings from 'react-star-ratings';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -81,11 +80,16 @@ const Product = () => {
                 prodId: productId,
                 comment: values.comment,
             };
-            dispatch(rating(data));
-            setTimeout(() => {
-                dispatch(getAProduct(productId));
-                formik.resetForm();
-            }, 200);
+            if (user) {
+                dispatch(rating(data));
+                setTimeout(() => {
+                    dispatch(getAProduct(productId));
+                    formik.resetForm();
+                }, 200);
+            } else {
+                toast.warning('Bạn cần đăng nhập để viết đánh giá');
+                navigate('/login');
+            }
         },
     });
     const ratingChanged = (newRating) => {

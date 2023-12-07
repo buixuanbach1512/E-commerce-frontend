@@ -21,7 +21,7 @@ const Home = () => {
                 <div className="container-xxl">
                     <div className="row">
                         <div className="col-12 col-lg-12 col-xl-6 main-banner">
-                            <div className="position-relative">
+                            <div className="position-relative main-img-banner">
                                 <img
                                     src="images/main-banner-1.jpg"
                                     className="img-fluid w-100 rounded-3"
@@ -221,7 +221,7 @@ const Home = () => {
                         </div>
                         {productState &&
                             productState
-                                ?.filter((item) => item.tags === 'featured')
+                                ?.filter((item) => item.tags === 'Sản phẩm nổi bật')
                                 ?.map((item) => <ProductCard key={item._id} item={item} />)}
                     </div>
                 </div>
@@ -236,7 +236,7 @@ const Home = () => {
                     <div className="row">
                         {productState &&
                             productState
-                                ?.filter((item) => item.tags === 'special')
+                                ?.filter((item) => item.tags === 'Sản phẩm đặc biệt')
                                 ?.map((item) => <SpecialProduct key={item._id} item={item} />)}
                     </div>
                 </div>

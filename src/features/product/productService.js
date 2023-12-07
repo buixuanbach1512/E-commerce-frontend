@@ -1,7 +1,7 @@
 import axios from '../../utils/axiosConfig';
 
-const getAllProduct = async () => {
-    const response = await axios.get(`product/`);
+const getAllProduct = async (queryData) => {
+    const response = await axios.get(`product?${queryData ? `category=${queryData}` : ''}`);
     return response.data;
 };
 

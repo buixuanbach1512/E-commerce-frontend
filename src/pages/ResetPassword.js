@@ -20,10 +20,7 @@ const ResetPassword = () => {
     const location = useLocation();
     const token = location.pathname.split('/')[2];
     const showPassword = () => {
-        setShow(true);
-    };
-    const hidePassword = () => {
-        setShow(false);
+        setShow(!show);
     };
 
     const formik = useFormik({
@@ -57,11 +54,11 @@ const ResetPassword = () => {
                                     <div className="input-password">
                                         {!show ? (
                                             <span className="icon-password">
-                                                <IoMdEye onClick={() => showPassword()} />
+                                                <IoMdEye onClick={showPassword} />
                                             </span>
                                         ) : (
                                             <span className="icon-password">
-                                                <IoMdEyeOff onClick={() => hidePassword()} />
+                                                <IoMdEyeOff onClick={showPassword} />
                                             </span>
                                         )}
                                         <input
