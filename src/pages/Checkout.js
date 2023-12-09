@@ -9,7 +9,8 @@ import { useEffect } from 'react';
 import { countryOptions } from '../components/ListCountry';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { createOrder, emptyCart } from '../features/auth/authSlice';
+import { createOrder, emptyCart, resetState } from '../features/auth/authSlice';
+import Paypal from '../components/PayPal';
 
 const schema = Yup.object().shape({
     firstName: Yup.string().required('Chưa nhập họ !!'),
@@ -27,6 +28,7 @@ const Checkout = () => {
     const [totalPrice, setTotalPrice] = useState(null);
     const [shippingInfo, setShippingInfo] = useState(null);
     const [orderItems, setOrderItems] = useState([]);
+    const [payment, setPayment] = useState(false);
     const cartState = useSelector((state) => state.auth.cart);
     const userState = useSelector((state) => state.auth.user);
     useEffect(() => {
@@ -61,13 +63,23 @@ const Checkout = () => {
         validationSchema: schema,
         onSubmit: (values) => {
             setShippingInfo(values);
+            setPayment(true);
         },
     });
     const placeOrder = () => {
-        dispatch(createOrder({ shippingInfo, orderItems, totalPrice, totalPriceAfterDiscount: totalPrice }));
+        dispatch(
+            createOrder({
+                shippingInfo,
+                orderItems,
+                totalPrice,
+                totalPriceAfterDiscount: totalPrice,
+                payment: 'Thanh toán khi giao hàng',
+            }),
+        );
         setTimeout(() => {
             dispatch(emptyCart());
-            window.location.reload();
+            dispatch(resetState());
+            navigate('/order');
         }, 1000);
     };
     return (
@@ -103,7 +115,7 @@ const Checkout = () => {
                             </p>
                             <form
                                 onSubmit={formik.handleSubmit}
-                                className="d-flex flex-wrap gap-15 justify-content-between"
+                                className="d-flex flex-wrap gap-15 justify-content-between border-bottom py-3"
                             >
                                 <div className="flex-grow-1">
                                     <input
@@ -210,12 +222,36 @@ const Checkout = () => {
                                         <button type="submit" className="button border-0">
                                             Tiếp tục mua sắm
                                         </button>
-                                        <button type="button" className="button border-0" onClick={() => placeOrder()}>
-                                            Đặt hàng
-                                        </button>
                                     </div>
                                 </div>
                             </form>
+                            {payment && (
+                                <div className="border-bottom py-4">
+                                    <h4 className="title">Phương thức thanh toán</h4>
+                                    <div className="row mt-5">
+                                        <div className="col-12 mb-4">
+                                            <button
+                                                type="button"
+                                                className=" button w-100 p-4 rounded-3 border-0"
+                                                onClick={() => placeOrder()}
+                                            >
+                                                Thanh toán khi giao hàng
+                                            </button>
+                                        </div>
+                                        <div className="col-12">
+                                            <Paypal
+                                                payload={{
+                                                    shippingInfo,
+                                                    orderItems,
+                                                    totalPrice,
+                                                    totalPriceAfterDiscount: totalPrice,
+                                                }}
+                                                amount={Math.round((totalPrice + 10000) / 23500)}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                         <div className="col-5">
                             <div className="border-bottom py-4">
@@ -243,7 +279,7 @@ const Checkout = () => {
 
                                             <div className="flex-grow-1 text-end">
                                                 <h5>
-                                                    {item.price * item.quantity}
+                                                    {(item.price * item.quantity).toLocaleString('vi')}
                                                     <sup>đ</sup>
                                                 </h5>
                                             </div>
@@ -254,7 +290,7 @@ const Checkout = () => {
                                 <div className="d-flex justify-content-between align-items-center">
                                     <p>Tổng đơn hàng</p>
                                     <p>
-                                        {totalPrice ? totalPrice : 0}
+                                        {totalPrice ? totalPrice.toLocaleString('vi') : 0}
                                         <sup>đ</sup>
                                     </p>
                                 </div>
@@ -268,7 +304,7 @@ const Checkout = () => {
                             <div className="d-flex justify-content-between align-items-center py-4">
                                 <h4>Tổng tiền</h4>
                                 <h5 className="total-price">
-                                    {totalPrice ? totalPrice + 10000 : 0}
+                                    {totalPrice ? (totalPrice + 10000).toLocaleString('vi') : 0}
                                     <sup>đ</sup>
                                 </h5>
                             </div>

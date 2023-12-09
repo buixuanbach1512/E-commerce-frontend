@@ -1,18 +1,25 @@
 import React from 'react';
-import ReactStars from 'react-rating-stars-component';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { addToWishList } from '../features/product/productSlice';
 import { IoIosHeartEmpty } from 'react-icons/io';
 import { BsEye } from 'react-icons/bs';
 import { IoBagOutline } from 'react-icons/io5';
+import { toast } from 'react-toastify';
+import StarRatings from 'react-star-ratings';
+import parse from 'html-react-parser';
 
 const ProductCard = (props) => {
     const { grid, item } = props;
     let location = useLocation();
+    const authState = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const addToWL = (id) => {
-        dispatch(addToWishList(id));
+        if (authState.user !== null && authState.isError === false) {
+            dispatch(addToWishList(id));
+        } else {
+            toast.warning('Chưa đăng nhập');
+        }
     };
     return (
         <div className={`${location.pathname === '/store' ? `col-${grid}` : 'col-2'}`} style={{ padding: 5 }}>
@@ -35,10 +42,20 @@ const ProductCard = (props) => {
                 <div className="product-details">
                     <h6 className="brand">{item.brand.name}</h6>
                     <h5 className="product-title">{item.name}</h5>
-                    <ReactStars count={5} size={24} value={item.totalRating} edit={false} activeColor="#ffd700" />
-                    <p className={`description ${grid === 12 ? 'd-block' : 'd-none'}`}>{item.description}</p>
+                    <div className="mb-2">
+                        <StarRatings
+                            rating={item.totalRating}
+                            starRatedColor="#ffd700"
+                            numberOfStars={5}
+                            starDimension="20px"
+                            starSpacing="1px"
+                            name="rating"
+                        />
+                    </div>
+
+                    <p className={`description ${grid === 12 ? 'd-block' : 'd-none'}`}>{parse(item.description)}</p>
                     <p className="price">
-                        {item.price}
+                        {item.price.toLocaleString('vi')}
                         <sup>đ</sup>
                     </p>
                 </div>

@@ -88,7 +88,7 @@ const Cart = () => {
                                         </div>
                                         <div className="cart-col-2">
                                             <h5 className="price">
-                                                {item?.price}
+                                                {item?.price.toLocaleString('vi')}
                                                 <sup>đ</sup>
                                             </h5>
                                         </div>
@@ -117,7 +117,7 @@ const Cart = () => {
                                         </div>
                                         <div className="cart-col-4">
                                             <h5 className="price">
-                                                {item?.price * item?.quantity}
+                                                {(item?.price * item?.quantity).toLocaleString('vi')}
                                                 <sup>đ</sup>
                                             </h5>
                                         </div>
@@ -133,7 +133,7 @@ const Cart = () => {
                                 </div>
                                 <div className="d-flex flex-column align-items-end">
                                     <h4>
-                                        Tổng tiền giỏ hàng: {totalPrice}
+                                        Tổng tiền giỏ hàng: {totalPrice.toLocaleString('vi')}
                                         <sup>đ</sup>
                                     </h4>
                                     <p>Thuế và phí vận chuyển được tính khi thanh toán</p>

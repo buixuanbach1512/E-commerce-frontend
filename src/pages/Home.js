@@ -221,6 +221,7 @@ const Home = () => {
                         </div>
                         {productState &&
                             productState
+                                ?.slice(0, 12)
                                 ?.filter((item) => item.tags === 'Sản phẩm nổi bật')
                                 ?.map((item) => <ProductCard key={item._id} item={item} />)}
                     </div>
@@ -236,6 +237,7 @@ const Home = () => {
                     <div className="row">
                         {productState &&
                             productState
+                                ?.slice(0, 4)
                                 ?.filter((item) => item.tags === 'Sản phẩm đặc biệt')
                                 ?.map((item) => <SpecialProduct key={item._id} item={item} />)}
                     </div>

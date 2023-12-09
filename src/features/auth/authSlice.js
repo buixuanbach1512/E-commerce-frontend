@@ -2,13 +2,10 @@ import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import { authService } from './authService';
 import { toast } from 'react-toastify';
 
-const getUserfromSessionStorage = sessionStorage.getItem('customer')
-    ? JSON.parse(sessionStorage.getItem('customer'))
-    : null;
-
 const initialState = {
-    user: getUserfromSessionStorage,
+    user: JSON.parse(sessionStorage.getItem('customer')),
     cart: [],
+    createdUser: '',
     isLoading: false,
     isSuccess: false,
     isError: false,
@@ -150,7 +147,7 @@ export const authSlice = createSlice({
                 state.isLoading = false;
                 state.isError = false;
                 state.isSuccess = true;
-                state.user = action.payload;
+                state.createdUser = action.payload;
                 if (state.isSuccess === true) {
                     toast.success('Đăng ký thành công!');
                 }
@@ -161,7 +158,7 @@ export const authSlice = createSlice({
                 state.isSuccess = false;
                 state.message = action.error;
                 if (state.isError === true) {
-                    toast.error('Đăng ký thất bại!');
+                    toast.error(action.payload.response.data.message);
                 }
             })
             .addCase(login.pending, (state) => {
@@ -173,6 +170,15 @@ export const authSlice = createSlice({
                 state.isSuccess = true;
                 state.user = action.payload;
                 if (state.isSuccess === true) {
+                    let newUserData = {
+                        _id: action.payload._id,
+                        token: action.payload.token,
+                        name: action.payload.name,
+                        email: action.payload.email,
+                        mobile: action.payload.mobile,
+                        address: action.payload.address,
+                    };
+                    sessionStorage.setItem('customer', JSON.stringify(newUserData));
                     toast.success('Đăng nhập thành công!');
                 }
             })
@@ -182,7 +188,7 @@ export const authSlice = createSlice({
                 state.isSuccess = false;
                 state.message = action.error;
                 if (state.isError === true) {
-                    toast.error('Đăng nhập thất bại!');
+                    toast.error(action.payload.response.data.message);
                 }
             })
             .addCase(getUserWishList.pending, (state) => {
@@ -224,6 +230,17 @@ export const authSlice = createSlice({
                 state.isSuccess = true;
                 state.updatedUser = action.payload;
                 if (state.isSuccess === true) {
+                    let currentUserData = JSON.parse(sessionStorage.getItem('customer'));
+                    let newUserData = {
+                        _id: currentUserData?._id,
+                        token: currentUserData?.token,
+                        name: action.payload.name,
+                        email: action.payload.email,
+                        mobile: action.payload.mobile,
+                        address: action.payload.address,
+                    };
+                    sessionStorage.setItem('customer', JSON.stringify(newUserData));
+                    state.user = newUserData;
                     toast.success('Cập nhật thành công');
                 }
             })
@@ -296,7 +313,7 @@ export const authSlice = createSlice({
                 state.isSuccess = false;
                 state.message = action.error;
                 if (state.isError === true) {
-                    toast.error('Đã có lỗi xảy ra!!!');
+                    toast.error(action.payload.response.data.message);
                 }
             })
             .addCase(getCart.pending, (state) => {

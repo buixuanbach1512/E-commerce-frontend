@@ -21,7 +21,6 @@ const Store = () => {
     const categoryState = useSelector((state) => state.category.categories);
     const [searchParams] = useSearchParams();
     const queryData = searchParams.get('category') ? searchParams.get('category') : undefined;
-    console.log(categoryState?.category?._id);
     useEffect(() => {
         let newTags = [];
         for (let i = 0; i < productState.length; i++) {
@@ -203,25 +202,37 @@ const Store = () => {
                                         <p className="total-products mb-0">{productState?.length} sản phẩm</p>
                                         <div className="d-flex gap-10 align-items-center">
                                             <img
-                                                onClick={() => setGrid(3)}
+                                                onClick={() => {
+                                                    setGrid(3);
+                                                    setItemsPerPage(8);
+                                                }}
                                                 src="images/gr4.svg"
                                                 alt="grid"
                                                 className="d-block img-fluid"
                                             />
                                             <img
-                                                onClick={() => setGrid(4)}
+                                                onClick={() => {
+                                                    setGrid(4);
+                                                    setItemsPerPage(9);
+                                                }}
                                                 src="images/gr3.svg"
                                                 alt="grid"
                                                 className="d-block img-fluid"
                                             />
                                             <img
-                                                onClick={() => setGrid(6)}
+                                                onClick={() => {
+                                                    setGrid(6);
+                                                    setItemsPerPage(6);
+                                                }}
                                                 src="images/gr2.svg"
                                                 alt="grid"
                                                 className="d-block img-fluid"
                                             />
                                             <img
-                                                onClick={() => setGrid(12)}
+                                                onClick={() => {
+                                                    setGrid(12);
+                                                    setItemsPerPage(5);
+                                                }}
                                                 src="images/gr.svg"
                                                 alt="grid"
                                                 className="d-block img-fluid"

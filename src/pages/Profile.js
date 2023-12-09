@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import BreadCrumb from '../components/BreadCrumb';
 import Meta from '../components/Meta';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAUser, updateUser } from '../features/auth/authSlice';
-import { useLocation } from 'react-router-dom';
+import { updateUser } from '../features/auth/authSlice';
 
 const schema = Yup.object().shape({
     name: Yup.string().required('Chưa nhập họ và tên'),
@@ -17,26 +16,18 @@ const schema = Yup.object().shape({
 const Profile = () => {
     const [editEmail, setEditEmail] = useState(false);
     const dispatch = useDispatch();
-    const location = useLocation();
-    const userId = location.pathname.split('/')[2];
-    const userState = useSelector((state) => state?.auth?.getUser);
-    useEffect(() => {
-        dispatch(getAUser(userId));
-    }, [dispatch, userId]);
+    const userState = useSelector((state) => state.auth.user);
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
-            name: userState?.name || '',
-            email: userState?.email || '',
-            address: userState?.address || '',
-            mobile: userState?.mobile || '',
+            name: userState.name || '',
+            email: userState.email || '',
+            address: userState.address || '',
+            mobile: userState.mobile || '',
         },
         validationSchema: schema,
         onSubmit: (values) => {
             dispatch(updateUser(values));
-            setTimeout(() => {
-                dispatch(getAUser(userId));
-            }, 200);
         },
     });
     return (
@@ -51,20 +42,20 @@ const Profile = () => {
                             <div className="profile-content bg-white p-3">
                                 <div className=" d-flex justify-content-between align-items-center mt-3">
                                     <div>
-                                        <h6>Họ và tên: {userState?.name}</h6>
+                                        <h6>Họ và tên: {userState.name}</h6>
                                     </div>
                                     <div>
-                                        <h6>Số điện thoại: {userState?.mobile}</h6>
+                                        <h6>Số điện thoại: {userState.mobile}</h6>
                                     </div>
                                 </div>
                                 <div className=" d-flex justify-content-between align-items-center mt-3">
                                     <div>
-                                        <h6>Email: {userState?.email}</h6>
+                                        <h6>Email: {userState.email}</h6>
                                     </div>
                                 </div>
                                 <div className="mt-3">
                                     <div>
-                                        <h6>Địa chỉ: {userState?.address}</h6>
+                                        <h6>Địa chỉ: {userState.address}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -114,8 +105,8 @@ const Profile = () => {
                                         ) : (
                                             <div className=" d-flex gap-10">
                                                 <p className=" mb-0">
-                                                    Email <span className=" badge text-danger fs-5 p-0">*</span> :{' '}
-                                                    {userState?.email}
+                                                    Email <span className=" badge text-danger fs-5 p-0">*</span> :
+                                                    {userState.email}
                                                 </p>
                                                 <button
                                                     onClick={() => setEditEmail(true)}

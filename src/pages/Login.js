@@ -14,7 +14,7 @@ const schema = Yup.object().shape({
 const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const userState = useSelector((state) => state.auth.user);
+    const userState = useSelector((state) => state.auth);
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -26,12 +26,8 @@ const Login = () => {
         },
     });
     useEffect(() => {
-        if (userState !== null) {
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
-        } else {
-            navigate('/login');
+        if (userState.user !== null && userState.isError === false) {
+            navigate('/');
         }
     }, [navigate, userState]);
     return (

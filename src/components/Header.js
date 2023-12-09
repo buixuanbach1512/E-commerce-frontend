@@ -9,7 +9,7 @@ import { IoCartOutline } from 'react-icons/io5';
 import { IoClose } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCategory } from '../features/category/categorySlice';
-import { getAUser, getCart } from '../features/auth/authSlice';
+import { getCart } from '../features/auth/authSlice';
 
 const Header = () => {
     const user = sessionStorage.getItem('customer');
@@ -22,18 +22,15 @@ const Header = () => {
     const [wordEntered, setWordEntered] = useState('');
 
     const authState = useSelector((state) => state.auth);
-    const userState = useSelector((state) => state.auth.getUser);
     const categoryState = useSelector((state) => state.category.categories);
     const cartState = useSelector((state) => state.auth.cart);
     const allProductState = useSelector((state) => state.product.products);
-    const userId = authState?.user?._id;
     useEffect(() => {
         dispatch(getAllCategory());
         if (user) {
-            dispatch(getAUser(userId));
             dispatch(getCart());
         }
-    }, [dispatch, user, userId]);
+    }, [dispatch, user]);
 
     useEffect(() => {
         let count = 0;
@@ -166,7 +163,7 @@ const Header = () => {
                                     </Link>
                                 </div>
                                 <div className="nav-links">
-                                    {authState && authState?.user !== null ? (
+                                    {authState && authState.user !== null ? (
                                         <div className="btn-group">
                                             <button
                                                 className="btn dropdown-toggle d-flex align-items-center gap-10 text-white bg-transparent border-0"
@@ -179,14 +176,14 @@ const Header = () => {
                                                 <p className="mb-0 header-upper-text">
                                                     Chào mừng
                                                     <br />
-                                                    {userState && userState?.name}
+                                                    {authState && authState.user.name}
                                                 </p>
                                             </button>
                                             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                 <li>
                                                     <Link
                                                         className="dropdown-item text-dark"
-                                                        to={`/my-profile/${authState?.user?._id}`}
+                                                        to={`/my-profile/${authState.user._id}`}
                                                     >
                                                         Thông tin cá nhân
                                                     </Link>
@@ -227,7 +224,7 @@ const Header = () => {
                                                 </span>
                                             </div>
                                             <p className="mb-0 header-upper-text">
-                                                {totalPrice ? totalPrice : 0} <sup>đ</sup>
+                                                {totalPrice ? totalPrice.toLocaleString('vi') : 0} <sup>đ</sup>
                                             </p>
                                         </div>
                                     </Link>

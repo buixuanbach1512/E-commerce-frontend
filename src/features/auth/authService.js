@@ -1,4 +1,5 @@
-import axios from '../../utils/axiosConfig';
+import axios from 'axios';
+axios.defaults.baseURL = 'http://localhost:5000/api/';
 
 const register = async (userData) => {
     const response = await axios.post(`user/register`, userData);
@@ -8,11 +9,8 @@ const register = async (userData) => {
 };
 
 const login = async (userData) => {
-    const response = await axios.post(`user/login`, userData, {
-        withCredentials: true,
-    });
+    const response = await axios.post(`user/login`, userData);
     if (response.data) {
-        sessionStorage.setItem('customer', JSON.stringify(response.data));
         return response.data;
     }
 };
@@ -25,6 +23,8 @@ const getAUser = async (userId) => {
 };
 
 const updateUser = async (userData) => {
+    let getToken = JSON.parse(sessionStorage.getItem('customer'))?.token;
+    axios.defaults.headers.common = { Authorization: `Bearer ${getToken}` };
     const response = await axios.put(`user/edit-user`, userData);
     if (response.data) {
         return response.data;
@@ -46,6 +46,8 @@ const resetPassword = async (data) => {
 };
 
 const getUserWishList = async () => {
+    let getToken = JSON.parse(sessionStorage.getItem('customer'))?.token;
+    axios.defaults.headers.common = { Authorization: `Bearer ${getToken}` };
     const response = await axios.get(`user/wishlist`);
     if (response.data) {
         return response.data;
@@ -53,6 +55,8 @@ const getUserWishList = async () => {
 };
 
 const addToCart = async (cartData) => {
+    let getToken = JSON.parse(sessionStorage.getItem('customer'))?.token;
+    axios.defaults.headers.common = { Authorization: `Bearer ${getToken}` };
     const response = await axios.post(`user/add-to-cart`, cartData);
     if (response.data) {
         return response.data;
@@ -60,6 +64,8 @@ const addToCart = async (cartData) => {
 };
 
 const getCart = async () => {
+    let getToken = JSON.parse(sessionStorage.getItem('customer'))?.token;
+    axios.defaults.headers.common = { Authorization: `Bearer ${getToken}` };
     const response = await axios.get(`user/cart`);
     if (response.data) {
         return response.data;
@@ -67,12 +73,16 @@ const getCart = async () => {
 };
 
 const removeProdCart = async (id) => {
+    let getToken = JSON.parse(sessionStorage.getItem('customer'))?.token;
+    axios.defaults.headers.common = { Authorization: `Bearer ${getToken}` };
     const response = await axios.delete(`user/delete-cart/${id}`);
     if (response.data) {
         return response.data;
     }
 };
 const updateQuantityCart = async (cartData) => {
+    let getToken = JSON.parse(sessionStorage.getItem('customer'))?.token;
+    axios.defaults.headers.common = { Authorization: `Bearer ${getToken}` };
     const response = await axios.put(`user/update-cart/${cartData.id}/${cartData.quantity}`);
     if (response.data) {
         return response.data;
@@ -80,6 +90,8 @@ const updateQuantityCart = async (cartData) => {
 };
 
 const createOrder = async (orderData) => {
+    let getToken = JSON.parse(sessionStorage.getItem('customer'))?.token;
+    axios.defaults.headers.common = { Authorization: `Bearer ${getToken}` };
     const response = await axios.post(`user/create-order/`, orderData);
     if (response.data) {
         return response.data;
@@ -87,6 +99,8 @@ const createOrder = async (orderData) => {
 };
 
 const emptyCart = async () => {
+    let getToken = JSON.parse(sessionStorage.getItem('customer'))?.token;
+    axios.defaults.headers.common = { Authorization: `Bearer ${getToken}` };
     const response = await axios.delete(`user/empty-cart/`);
     if (response.data) {
         return response.data;
@@ -94,6 +108,8 @@ const emptyCart = async () => {
 };
 
 const userOrder = async () => {
+    let getToken = JSON.parse(sessionStorage.getItem('customer'))?.token;
+    axios.defaults.headers.common = { Authorization: `Bearer ${getToken}` };
     const response = await axios.get(`user/order`);
     if (response.data) {
         return response.data;

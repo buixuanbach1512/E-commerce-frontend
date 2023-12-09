@@ -3,9 +3,9 @@ import BreadCrumb from '../components/BreadCrumb';
 import Meta from '../components/Meta';
 import ProductCard from '../components/ProductCard';
 import StarRatings from 'react-star-ratings';
+import parse from 'html-react-parser';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import ReactImageZoom from 'react-image-zoom';
 import Color from '../components/Color';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
@@ -48,10 +48,6 @@ const Product = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    const props = {
-        zoomPosition: 'original',
-        img: `${prodState?.images[0]?.url}`,
-    };
     const addCart = () => {
         if (color === null) {
             toast.error('Chưa chọn màu sản phẩm');
@@ -63,10 +59,22 @@ const Product = () => {
                 color,
                 price: prodState?.price,
             };
-            dispatch(addToCart(data));
-            setTimeout(() => {
-                navigate('/cart');
-            }, 2000);
+            if (user) {
+                if (prodState?.quantity > 0) {
+                    if (prodState?.quantity - quantity < 0) {
+                        toast.warning('Không dủ hàng trong kho');
+                    } else {
+                        dispatch(addToCart(data));
+                        setTimeout(() => {
+                            navigate('/cart');
+                        }, 1000);
+                    }
+                } else {
+                    toast.error('Sản phẩm đã hết hàng');
+                }
+            } else {
+                toast.warning('Chưa đăng nhập');
+            }
         }
     };
     const formik = useFormik({
@@ -87,8 +95,7 @@ const Product = () => {
                     formik.resetForm();
                 }, 200);
             } else {
-                toast.warning('Bạn cần đăng nhập để viết đánh giá');
-                navigate('/login');
+                toast.warning('Chưa đăng nhập');
             }
         },
     });
@@ -105,7 +112,7 @@ const Product = () => {
                         <div className="col-6 product-images">
                             <div className="main-product-image">
                                 <div>
-                                    <ReactImageZoom {...props} />
+                                    <img className="img-fluid" src={prodState?.images[0]?.url} alt="main-img" />
                                 </div>
                             </div>
                             <div className="other-product-image d-flex flex-wrap gap-15">
@@ -123,7 +130,7 @@ const Product = () => {
                                 </div>
                                 <div className="border-bottom py-3">
                                     <p className="price">
-                                        {prodState?.price}
+                                        {prodState?.price.toLocaleString('vi')}
                                         <sup>đ</sup>
                                     </p>
                                     <div className="d-flex align-items-center gap-10">
@@ -197,7 +204,7 @@ const Product = () => {
                                                     <input
                                                         type="number"
                                                         min={1}
-                                                        max={10}
+                                                        max={prodState && prodState?.quantity}
                                                         className="form-control"
                                                         style={{ width: 70 }}
                                                         onChange={(e) => setQuantity(e.target.value)}
@@ -227,10 +234,6 @@ const Product = () => {
                                             </button>
                                         </div>
                                     </div>
-                                    <div className="d-flex gap-15 align-items-center ">
-                                        <div></div>
-                                        <div></div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -243,7 +246,7 @@ const Product = () => {
                         <div className="col-12">
                             <h3 className="mb-3">Mô tả sản phẩm</h3>
                             <div className="bg-white p-3">
-                                <p>{prodState?.description}</p>
+                                <p>{prodState && parse(prodState?.description)}</p>
                             </div>
                         </div>
                     </div>

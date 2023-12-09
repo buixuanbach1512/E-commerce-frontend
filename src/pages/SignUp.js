@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Meta from '../components/Meta';
 import BreadScumb from '../components/BreadCrumb';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-import { register, resetState } from '../features/auth/authSlice';
+import { register } from '../features/auth/authSlice';
 
 const schema = Yup.object().shape({
     name: Yup.string().required('Chưa nhập họ tên'),
@@ -17,8 +17,8 @@ const schema = Yup.object().shape({
 
 const SignUp = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const registerState = useSelector((state) => state.auth);
-    console.log(registerState);
     const formik = useFormik({
         initialValues: {
             name: '',
@@ -31,11 +31,13 @@ const SignUp = () => {
         onSubmit: (values) => {
             dispatch(register(values));
             formik.resetForm();
-            setTimeout(() => {
-                dispatch(resetState());
-            }, 200);
         },
     });
+    useEffect(() => {
+        if (registerState.createdUser !== null && registerState.isError === false) {
+            navigate('/login');
+        }
+    }, [navigate, registerState]);
     return (
         <>
             <Meta title={'Đăng ký'} />

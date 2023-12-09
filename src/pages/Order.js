@@ -4,6 +4,7 @@ import Meta from '../components/Meta';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { userOrder } from '../features/auth/authSlice';
+import moment from 'moment';
 
 const Order = () => {
     const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const Order = () => {
                                     <h5>Mã đơn hàng</h5>
                                 </div>
                                 <div className="col-3">
-                                    <h5>Tổng tiền</h5>
+                                    <h5>Ngày đặt</h5>
                                 </div>
                                 <div className="col-3">
                                     <h5>Tổng tiền (đã giảm giá)</h5>
@@ -47,14 +48,11 @@ const Order = () => {
                                             <p className="order-data">{item?._id}</p>
                                         </div>
                                         <div className="col-3">
-                                            <p className="order-data">
-                                                {item?.totalPrice}
-                                                <sup>đ</sup>
-                                            </p>
+                                            <p className="order-data">{moment(item?.orderedAt).format('DD/MM/YYYY')}</p>
                                         </div>
                                         <div className="col-3">
                                             <p className="order-data">
-                                                {item?.totalPriceAfterDiscount}
+                                                {item?.totalPriceAfterDiscount.toLocaleString('vi')}
                                                 <sup>đ</sup>
                                             </p>
                                         </div>
@@ -100,7 +98,7 @@ const Order = () => {
                                                             </div>
                                                             <div className="col-3 d-flex align-items-center">
                                                                 <p className=" mb-0">
-                                                                    {i?.price}
+                                                                    {i?.price.toLocaleString('vi')}
                                                                     <sup>đ</sup>
                                                                 </p>
                                                             </div>

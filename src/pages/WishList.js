@@ -9,7 +9,7 @@ import { addToWishList } from '../features/product/productSlice';
 
 const WishList = () => {
     const dispatch = useDispatch();
-    const wishListState = useSelector((state) => state?.auth?.wishList?.wishlist);
+    const wishListState = useSelector((state) => state.auth?.wishList?.wishlist);
     useEffect(() => {
         dispatch(getUserWishList());
     }, [dispatch]);

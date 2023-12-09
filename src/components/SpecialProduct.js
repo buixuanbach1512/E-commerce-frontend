@@ -1,6 +1,6 @@
 import React from 'react';
-import ReactStars from 'react-rating-stars-component';
 import { Link } from 'react-router-dom';
+import StarRatings from 'react-star-ratings';
 
 const SpecialProduct = (props) => {
     const { item } = props;
@@ -8,18 +8,27 @@ const SpecialProduct = (props) => {
         <div key={item._id} className="col-6 mb-3">
             <div className="special-product-card">
                 <div className="d-flex justify-content-between">
-                    <div className="special-product-image">
+                    <div className="special-product-image w-50">
                         <Link to={`/product/${item._id}`}>
-                            <img className="img-fluid" src="images/watch.jpg" alt="watch" />
+                            <img className="img-fluid" src={item.images[0].url} alt="watch" />
                         </Link>
                     </div>
-                    <div className="special-product-content">
+                    <div className="special-product-content w-50">
                         <h5 className="brand">{item.brand.name}</h5>
                         <h6 className="title">{item.name}</h6>
-                        <ReactStars count={5} size={24} value={item.totalRating} edit={false} activeColor="#ffd700" />
+                        <div className="mb-2">
+                            <StarRatings
+                                rating={item.totalRating}
+                                starRatedColor="#ffd700"
+                                numberOfStars={5}
+                                starDimension="20px"
+                                starSpacing="1px"
+                                name="rating"
+                            />
+                        </div>
                         <p className="price">
                             <span className="red-p">
-                                {item.price}
+                                {item.price.toLocaleString('vi')}
                                 <sup>đ</sup>
                             </span>
                             &nbsp;
@@ -38,8 +47,10 @@ const SpecialProduct = (props) => {
                             </div>
                         </div>
                         <div className="prod-count my-3">
-                            <p>{item.quantity} Sản Phẩm</p>
-                            <div className="progress">
+                            <p>
+                                {item.quantity} Sản Phẩm - Đã bán: {item.sold}
+                            </p>
+                            <div className="progress w-75">
                                 <div
                                     className="progress-bar"
                                     role="progressbar"
