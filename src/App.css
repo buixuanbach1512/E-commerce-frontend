@@ -821,6 +821,8 @@ filter-card .form-check-label {
     background-color: var(--color-febd69);
 }
 .table-data p.order-data {
+    font-size: 1.1rem;
+    font-weight: 600;
     padding: 10px 0;
     margin-bottom: 0;
 }

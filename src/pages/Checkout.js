@@ -11,6 +11,7 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { createOrder, emptyCart, resetState } from '../features/auth/authSlice';
 import Paypal from '../components/PayPal';
+import Confetticp from '../components/Confetticp';
 
 const schema = Yup.object().shape({
     firstName: Yup.string().required('Chưa nhập họ !!'),
@@ -28,7 +29,10 @@ const Checkout = () => {
     const [totalPrice, setTotalPrice] = useState(null);
     const [shippingInfo, setShippingInfo] = useState(null);
     const [orderItems, setOrderItems] = useState([]);
+    const [isSuccess, setIsSuccess] = useState(false);
     const [payment, setPayment] = useState(false);
+    const [checkedCOD, setCheckedCOD] = useState(false);
+    const [checkedPayPal, setCheckedPayPal] = useState(false);
     const cartState = useSelector((state) => state.auth.cart);
     const userState = useSelector((state) => state.auth.user);
     useEffect(() => {
@@ -66,6 +70,12 @@ const Checkout = () => {
             setPayment(true);
         },
     });
+    const handleCheckCOD = () => {
+        setCheckedCOD(!checkedCOD);
+    };
+    const handleCheckPayPal = () => {
+        setCheckedPayPal(!checkedPayPal);
+    };
     const placeOrder = () => {
         dispatch(
             createOrder({
@@ -89,6 +99,7 @@ const Checkout = () => {
             <section className="checkout-wrapper py-5 home-wrapper-2">
                 <div className="container">
                     <div className="row">
+                        {isSuccess && <Confetticp />}
                         <div className="col-7">
                             <h3 className="website-name">B-SHOP</h3>
                             <nav aria-label="breadcrumb" className="py-3">
@@ -219,35 +230,61 @@ const Checkout = () => {
                                             <IoMdArrowBack />
                                             Trở về giỏ hàng
                                         </Link>
-                                        <button type="submit" className="button border-0">
-                                            Tiếp tục mua sắm
-                                        </button>
+                                        {!payment && (
+                                            <button type="submit" className="button border-0">
+                                                Tiếp tục mua sắm
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             </form>
                             {payment && (
-                                <div className="border-bottom py-4">
+                                <div className="py-4">
                                     <h4 className="title">Phương thức thanh toán</h4>
                                     <div className="row mt-5">
-                                        <div className="col-12 mb-4">
-                                            <button
-                                                type="button"
-                                                className=" button w-100 p-4 rounded-3 border-0"
-                                                onClick={() => placeOrder()}
-                                            >
-                                                Thanh toán khi giao hàng
-                                            </button>
+                                        <div className="col-12 mb-3 border-bottom">
+                                            <div className=" d-flex align-items-center gap-5 mb-3 ">
+                                                <input
+                                                    type="checkbox"
+                                                    id="payment-checkbox1"
+                                                    onClick={handleCheckCOD}
+                                                />
+                                                <label htmlFor="payment-checkbox1">
+                                                    COD - Thanh toán khi giao hàng
+                                                </label>
+                                            </div>
+
+                                            {checkedCOD && (
+                                                <button
+                                                    type="button"
+                                                    className=" button w-100 p-4 rounded-3 border-0 mb-2"
+                                                    onClick={() => placeOrder()}
+                                                >
+                                                    Đặt hàng
+                                                </button>
+                                            )}
                                         </div>
-                                        <div className="col-12">
-                                            <Paypal
-                                                payload={{
-                                                    shippingInfo,
-                                                    orderItems,
-                                                    totalPrice,
-                                                    totalPriceAfterDiscount: totalPrice,
-                                                }}
-                                                amount={Math.round((totalPrice + 10000) / 23500)}
-                                            />
+                                        <div className="col-12 border-bottom">
+                                            <div className=" d-flex align-items-center gap-5 mb-3">
+                                                <input
+                                                    type="checkbox"
+                                                    id="payment-checkbox2"
+                                                    onClick={handleCheckPayPal}
+                                                />
+                                                <label htmlFor="payment-checkbox2">Thanh toán qua PayPal</label>
+                                            </div>
+                                            {checkedPayPal && (
+                                                <Paypal
+                                                    setIsSuccess={setIsSuccess}
+                                                    payload={{
+                                                        shippingInfo,
+                                                        orderItems,
+                                                        totalPrice,
+                                                        totalPriceAfterDiscount: totalPrice,
+                                                    }}
+                                                    amount={Math.round((totalPrice + 10000) / 23500)}
+                                                />
+                                            )}
                                         </div>
                                     </div>
                                 </div>
