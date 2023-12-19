@@ -151,7 +151,7 @@ const Header = () => {
                             )}
                         </div>
                         <div className="col-4">
-                            <div className="header-upper-links d-flex align-items-center justify-content-end gap-15">
+                            <div className="header-upper-links d-flex align-items-center justify-content-end">
                                 <div className="nav-links">
                                     <Link className="d-flex align-items-center gap-10 text-white" to="/wishlist">
                                         <IoHeartOutline className="header-icon" />
@@ -223,7 +223,7 @@ const Header = () => {
                                                     {cartQuantity ? cartQuantity : 0}
                                                 </span>
                                             </div>
-                                            <p className="mb-0 header-upper-text">
+                                            <p className="header-price mb-0 header-upper-text">
                                                 {totalPrice ? totalPrice.toLocaleString('vi') : 0} <sup>đ</sup>
                                             </p>
                                         </div>
@@ -281,20 +281,61 @@ const Header = () => {
                                     style={{ transform: `translateX(${navMenu ? '0' : '100%'})` }}
                                 >
                                     <FaTimes className="nav-close" onClick={() => setnavMenu(false)} />
-                                    <ul className="nav-list">
-                                        <li>
-                                            <Link className="nav-item">Home</Link>
-                                        </li>
-                                        <li>
-                                            <Link className="nav-item">Cửa Hàng</Link>
-                                        </li>
-                                        <li>
-                                            <Link className="nav-item">Blogs</Link>
-                                        </li>
-                                        <li>
-                                            <Link className="nav-item">Liên Hệ</Link>
-                                        </li>
-                                    </ul>
+                                    <div className="py-3">
+                                        <ul className="nav-list">
+                                            <li className="nav-item">
+                                                <NavLink className="nav-link" to="/">
+                                                    Trang chủ
+                                                </NavLink>
+                                            </li>
+                                            <li className="nav-item">
+                                                <NavLink className="nav-link" to="/store">
+                                                    Cửa Hàng
+                                                </NavLink>
+                                            </li>
+                                            <li className="nav-item">
+                                                <NavLink className="nav-link" to="/contact">
+                                                    Liên Hệ
+                                                </NavLink>
+                                            </li>
+                                            <li className="nav-item">
+                                                <NavLink className="nav-link" to="/wishlist">
+                                                    Danh sách yêu thích
+                                                </NavLink>
+                                            </li>
+                                            <li className="nav-item">
+                                                <NavLink className="nav-link" to="/order">
+                                                    Đơn hàng
+                                                </NavLink>
+                                            </li>
+                                            {authState && authState.user !== null ? (
+                                                <>
+                                                    <li className="nav-item">
+                                                        <NavLink className="nav-link">
+                                                            Chào mừng: {authState.user.name}
+                                                        </NavLink>
+                                                    </li>
+                                                    <li className="nav-item">
+                                                        <NavLink
+                                                            className="nav-link"
+                                                            to={`/my-profile/${authState.user._id}`}
+                                                        >
+                                                            Thông tin cá nhân
+                                                        </NavLink>
+                                                    </li>
+                                                    <li className="nav-item">
+                                                        <NavLink className="nav-link" onClick={() => handleLogout()}>
+                                                            Đăng xuất
+                                                        </NavLink>
+                                                    </li>
+                                                </>
+                                            ) : (
+                                                <li className="nav-item">
+                                                    <NavLink to="/login">Đăng nhập</NavLink>
+                                                </li>
+                                            )}
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>

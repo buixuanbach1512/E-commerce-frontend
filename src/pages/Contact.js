@@ -56,7 +56,7 @@ const Contact = () => {
                             ></iframe>
                         </div>
                         <div className="col-12 mt-5">
-                            <div className="contact-content d-flex justify-content-between">
+                            <div className="contact-content">
                                 <div>
                                     <h3 className="contact-title mb-4">Phản hồi</h3>
                                     <form onSubmit={formik.handleSubmit} className="d-flex flex-column gap-15">

@@ -6,21 +6,16 @@ import { IoMdArrowBack } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { countryOptions } from '../components/ListCountry';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { createOrder, emptyCart, resetState } from '../features/auth/authSlice';
+import { applyCoupon, createOrder, emptyCart, resetState } from '../features/auth/authSlice';
 import Paypal from '../components/PayPal';
 import Confetticp from '../components/Confetticp';
 
 const schema = Yup.object().shape({
-    firstName: Yup.string().required('Chưa nhập họ !!'),
-    lastName: Yup.string().required('Chưa nhập tên !!'),
+    name: Yup.string().required('Chưa nhập tên !!'),
     address: Yup.string().required('Chưa nhập địa chỉ !!'),
-    province: Yup.string().required('Chưa nhập tỉnh thành !!'),
-    country: Yup.string().required('Chưa nhập quốc gia !!'),
-    other: Yup.string().required('Chưa nhập số nhà !!'),
-    zipCode: Yup.number().required('Chưa nhập Zip code !!'),
+    mobile: Yup.string().required('Chưa nhập số điện thoại !!'),
 });
 
 const Checkout = () => {
@@ -32,9 +27,12 @@ const Checkout = () => {
     const [isSuccess, setIsSuccess] = useState(false);
     const [payment, setPayment] = useState(false);
     const [checkedCOD, setCheckedCOD] = useState(false);
+    const [couponData, setCouponData] = useState(null);
+    const [apply, setApply] = useState(false);
     const [checkedPayPal, setCheckedPayPal] = useState(false);
     const cartState = useSelector((state) => state.auth.cart);
     const userState = useSelector((state) => state.auth.user);
+    const couponState = useSelector((state) => state.auth.totalPriceAfterDiscount);
     useEffect(() => {
         let sum = 0;
         for (let i = 0; i < cartState.length; i++) {
@@ -56,13 +54,10 @@ const Checkout = () => {
     }, [cartState]);
     const formik = useFormik({
         initialValues: {
-            firstName: '',
-            lastName: '',
-            address: '',
+            name: userState.name || '',
+            address: userState.address || '',
+            mobile: userState.mobile || '',
             other: '',
-            province: '',
-            country: '',
-            zipCode: '',
         },
         validationSchema: schema,
         onSubmit: (values) => {
@@ -76,13 +71,23 @@ const Checkout = () => {
     const handleCheckPayPal = () => {
         setCheckedPayPal(!checkedPayPal);
     };
+    const handleChange = (e) => {
+        setCouponData(e.target.value);
+    };
+    const handleApply = () => {
+        dispatch(applyCoupon(couponData));
+        setApply(true);
+    };
+    const handleCancel = () => {
+        setApply(false);
+    };
     const placeOrder = () => {
         dispatch(
             createOrder({
                 shippingInfo,
                 orderItems,
                 totalPrice,
-                totalPriceAfterDiscount: totalPrice,
+                totalPriceAfterDiscount: couponState && apply ? Number(couponState) : totalPrice,
                 payment: 'Thanh toán khi giao hàng',
             }),
         );
@@ -128,30 +133,17 @@ const Checkout = () => {
                                 onSubmit={formik.handleSubmit}
                                 className="d-flex flex-wrap gap-15 justify-content-between border-bottom py-3"
                             >
-                                <div className="flex-grow-1">
+                                <div className="w-100">
                                     <input
                                         type="text"
-                                        placeholder="Họ (Tên đệm)"
+                                        placeholder="Họ tên"
                                         className="form-control"
-                                        onChange={formik.handleChange('firstName')}
-                                        onBlur={formik.handleBlur('firstName')}
-                                        value={formik.values.firstName}
+                                        onChange={formik.handleChange('name')}
+                                        onBlur={formik.handleBlur('name')}
+                                        value={formik.values.name}
                                     />
                                     <div className="input-err ms-2 my-1 text-danger">
-                                        {formik.touched.firstName && formik.errors.firstName}
-                                    </div>
-                                </div>
-                                <div className="flex-grow-1">
-                                    <input
-                                        type="text"
-                                        placeholder="Tên"
-                                        className="form-control"
-                                        onChange={formik.handleChange('lastName')}
-                                        onBlur={formik.handleBlur('lastName')}
-                                        value={formik.values.lastName}
-                                    />
-                                    <div className="input-err ms-2 my-1 text-danger">
-                                        {formik.touched.lastName && formik.errors.lastName}
+                                        {formik.touched.name && formik.errors.name}
                                     </div>
                                 </div>
                                 <div className="w-100">
@@ -170,58 +162,23 @@ const Checkout = () => {
                                 <div className="w-100">
                                     <input
                                         type="text"
-                                        placeholder="Số nhà"
+                                        placeholder="Địa chỉ khác (Nếu có)"
                                         className="form-control"
                                         onChange={formik.handleChange('other')}
-                                        onBlur={formik.handleBlur('other')}
                                         value={formik.values.other}
                                     />
-                                    <div className="input-err ms-2 my-1 text-danger">
-                                        {formik.touched.other && formik.errors.other}
-                                    </div>
                                 </div>
-                                <div className="flex-grow-1">
+                                <div className="w-100">
                                     <input
                                         type="text"
-                                        placeholder="Tỉnh (Thành phố)"
+                                        placeholder="Số điện thoại liên lạc"
                                         className="form-control"
-                                        onChange={formik.handleChange('province')}
-                                        onBlur={formik.handleBlur('province')}
-                                        value={formik.values.province}
+                                        onChange={formik.handleChange('mobile')}
+                                        onBlur={formik.handleBlur('mobile')}
+                                        value={formik.values.mobile}
                                     />
                                     <div className="input-err ms-2 my-1 text-danger">
-                                        {formik.touched.province && formik.errors.province}
-                                    </div>
-                                </div>
-                                <div className="flex-grow-1">
-                                    <select
-                                        className="form-control form-select"
-                                        onChange={formik.handleChange('country')}
-                                        onBlur={formik.handleBlur('country')}
-                                        value={formik.values.country}
-                                    >
-                                        <option value="">Chọn quốc gia</option>
-                                        {countryOptions.map((item, index) => (
-                                            <option key={index} value={item.value}>
-                                                {item.label}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <div className="input-err ms-2 my-1 text-danger">
-                                        {formik.touched.country && formik.errors.country}
-                                    </div>
-                                </div>
-                                <div className="flex-grow-1">
-                                    <input
-                                        type="text"
-                                        placeholder="Zip code"
-                                        className="form-control"
-                                        onChange={formik.handleChange('zipCode')}
-                                        onBlur={formik.handleBlur('zipCode')}
-                                        value={formik.values.zipCode}
-                                    />
-                                    <div className="input-err ms-2 my-1 text-danger">
-                                        {formik.touched.zipCode && formik.errors.zipCode}
+                                        {formik.touched.mobile && formik.errors.mobile}
                                     </div>
                                 </div>
                                 <div className="w-100">
@@ -240,51 +197,79 @@ const Checkout = () => {
                             </form>
                             {payment && (
                                 <div className="py-4">
-                                    <h4 className="title">Phương thức thanh toán</h4>
-                                    <div className="row mt-5">
-                                        <div className="col-12 mb-3 border-bottom">
-                                            <div className=" d-flex align-items-center gap-5 mb-3 ">
-                                                <input
-                                                    type="checkbox"
-                                                    id="payment-checkbox1"
-                                                    onClick={handleCheckCOD}
-                                                />
-                                                <label htmlFor="payment-checkbox1">
-                                                    COD - Thanh toán khi giao hàng
-                                                </label>
-                                            </div>
-
-                                            {checkedCOD && (
-                                                <button
-                                                    type="button"
-                                                    className=" button w-100 p-4 rounded-3 border-0 mb-2"
-                                                    onClick={() => placeOrder()}
-                                                >
-                                                    Đặt hàng
-                                                </button>
-                                            )}
+                                    {apply ? (
+                                        <div className=" d-flex gap-10 mb-3">
+                                            <input
+                                                type="text"
+                                                className=" form-control"
+                                                placeholder="Nhập mã giảm giá"
+                                                value={couponData}
+                                                readOnly
+                                            />
+                                            <button type="button" className="btn btn-success" onClick={handleCancel}>
+                                                Hủy
+                                            </button>
                                         </div>
-                                        <div className="col-12 border-bottom">
-                                            <div className=" d-flex align-items-center gap-5 mb-3">
-                                                <input
-                                                    type="checkbox"
-                                                    id="payment-checkbox2"
-                                                    onClick={handleCheckPayPal}
-                                                />
-                                                <label htmlFor="payment-checkbox2">Thanh toán qua PayPal</label>
+                                    ) : (
+                                        <div className=" d-flex gap-10 mb-3">
+                                            <input
+                                                type="text"
+                                                className=" form-control"
+                                                placeholder="Nhập mã giảm giá"
+                                                onChange={handleChange}
+                                            />
+                                            <button type="button" className="btn btn-success" onClick={handleApply}>
+                                                OK
+                                            </button>
+                                        </div>
+                                    )}
+                                    <div>
+                                        <h4 className="title">Phương thức thanh toán</h4>
+                                        <div className="row mt-5">
+                                            <div className="col-12 mb-3 border-bottom">
+                                                <div className=" d-flex align-items-center gap-5 mb-3 ">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="payment-checkbox1"
+                                                        onClick={handleCheckCOD}
+                                                    />
+                                                    <label htmlFor="payment-checkbox1">
+                                                        COD - Thanh toán khi giao hàng
+                                                    </label>
+                                                </div>
+
+                                                {checkedCOD && (
+                                                    <button
+                                                        type="button"
+                                                        className=" button w-100 p-4 rounded-3 border-0 mb-2"
+                                                        onClick={() => placeOrder()}
+                                                    >
+                                                        Đặt hàng
+                                                    </button>
+                                                )}
                                             </div>
-                                            {checkedPayPal && (
-                                                <Paypal
-                                                    setIsSuccess={setIsSuccess}
-                                                    payload={{
-                                                        shippingInfo,
-                                                        orderItems,
-                                                        totalPrice,
-                                                        totalPriceAfterDiscount: totalPrice,
-                                                    }}
-                                                    amount={Math.round((totalPrice + 10000) / 23500)}
-                                                />
-                                            )}
+                                            <div className="col-12 border-bottom">
+                                                <div className=" d-flex align-items-center gap-5 mb-3">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="payment-checkbox2"
+                                                        onClick={handleCheckPayPal}
+                                                    />
+                                                    <label htmlFor="payment-checkbox2">Thanh toán qua PayPal</label>
+                                                </div>
+                                                {checkedPayPal && (
+                                                    <Paypal
+                                                        setIsSuccess={setIsSuccess}
+                                                        payload={{
+                                                            shippingInfo,
+                                                            orderItems,
+                                                            totalPrice,
+                                                            totalPriceAfterDiscount: totalPrice,
+                                                        }}
+                                                        amount={Math.round((totalPrice + 10000) / 23500)}
+                                                    />
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -340,10 +325,18 @@ const Checkout = () => {
                             </div>
                             <div className="d-flex justify-content-between align-items-center py-4">
                                 <h4>Tổng tiền</h4>
-                                <h5 className="total-price">
-                                    {totalPrice ? (totalPrice + 10000).toLocaleString('vi') : 0}
-                                    <sup>đ</sup>
-                                </h5>
+                                {apply ? (
+                                    <h5 className="total-price">
+                                        <del>{totalPrice ? (totalPrice + 10000).toLocaleString('vi') : 0}</del>{' '}
+                                        {couponState ? (Number(couponState) + 10000).toLocaleString('vi') : 0}
+                                        <sup>đ</sup>
+                                    </h5>
+                                ) : (
+                                    <h5 className="total-price">
+                                        {totalPrice ? (totalPrice + 10000).toLocaleString('vi') : 0}
+                                        <sup>đ</sup>
+                                    </h5>
+                                )}
                             </div>
                         </div>
                     </div>

@@ -12,7 +12,10 @@ const Color = (props) => {
                             setBorder && setBorder(item._id);
                         }}
                         key={index}
-                        style={{ background: item.name, border: border === item._id ? '3px solid #1e90ff' : 'none' }}
+                        style={{
+                            background: item.name,
+                            border: border === item._id ? '3px solid #1e90ff' : '1px solid #777',
+                        }}
                     ></li>
                 ))}
         </ul>

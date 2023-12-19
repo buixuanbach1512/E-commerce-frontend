@@ -44,10 +44,10 @@ const Store = () => {
         <>
             <Meta title={'Cửa Hàng'} />
             <BreadCrumb title="Cửa Hàng" />
-            <div className="store-wrapper home-wrapper-2 py-5">
+            <div className="store-wrapper home-wrapper-2">
                 <div className="container-xxl">
                     <div className="row">
-                        <div className="col-3">
+                        <div className="col-xl-3 col-md-3 col-12">
                             <div className="filter-card mb-3">
                                 <h3 className="filter-title">Mua Hàng Theo Danh Mục</h3>
                                 <div>
@@ -74,8 +74,9 @@ const Store = () => {
                                     <div>
                                         <div className="form-check">
                                             <input
-                                                type="checkbox"
+                                                type="radio"
                                                 value=""
+                                                name="stocks"
                                                 id="in-stocks"
                                                 className="form-check-input"
                                             />
@@ -85,8 +86,9 @@ const Store = () => {
                                         </div>
                                         <div className="form-check">
                                             <input
-                                                type="checkbox"
+                                                type="radio"
                                                 value=""
+                                                name="stocks"
                                                 id="out-stocks"
                                                 className="form-check-input"
                                             />
@@ -119,27 +121,6 @@ const Store = () => {
                                     <h5 className="sub-title">Màu Sắc</h5>
                                     <div>
                                         <Color colorData={colorState} />
-                                    </div>
-                                    <h5 className="sub-title">Size</h5>
-                                    <div>
-                                        <div className="form-check">
-                                            <input type="checkbox" value="" id="size-S" className="form-check-input" />
-                                            <label htmlFor="size-S" className="form-check-label">
-                                                S (2)
-                                            </label>
-                                        </div>
-                                        <div className="form-check">
-                                            <input type="checkbox" value="" id="size-M" className="form-check-input" />
-                                            <label htmlFor="size-M" className="form-check-label">
-                                                M (0)
-                                            </label>
-                                        </div>
-                                        <div className="form-check">
-                                            <input type="checkbox" value="" id="size-L" className="form-check-input" />
-                                            <label htmlFor="size-L" className="form-check-label">
-                                                L (2)
-                                            </label>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -186,7 +167,7 @@ const Store = () => {
                                 </div>
                             </div> */}
                         </div>
-                        <div className="col-9">
+                        <div className="col-xl-9 col-md-9">
                             <div className="filter-sort-grid mb-4">
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="d-flex align-items-center gap-10">
@@ -198,7 +179,7 @@ const Store = () => {
                                             <option value="Z-A">Z-A</option>
                                         </select>
                                     </div>
-                                    <div className="d-flex align-items-center gap-10 grid">
+                                    <div className="grid">
                                         <p className="total-products mb-0">{productState?.length} sản phẩm</p>
                                         <div className="d-flex gap-10 align-items-center">
                                             <img

@@ -5,9 +5,9 @@ import StarRatings from 'react-star-ratings';
 const SpecialProduct = (props) => {
     const { item } = props;
     return (
-        <div key={item._id} className="col-6 mb-3">
+        <div key={item._id} className="col-xl-6 mb-3">
             <div className="special-product-card">
-                <div className="d-flex justify-content-between">
+                <div className="d-flex justify-content-between gap-10">
                     <div className="special-product-image w-50">
                         <Link to={`/product/${item._id}`}>
                             <img className="img-fluid" src={item.images[0].url} alt="watch" />

@@ -7,24 +7,27 @@ import SpecialProduct from '../components/SpecialProduct';
 import Meta from '../components/Meta';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllProduct } from '../features/product/productSlice';
+import { getProdCategory } from '../features/category/categorySlice';
 
 const Home = () => {
     const dispatch = useDispatch();
     const productState = useSelector((state) => state.product.products);
+    const prodCateState = useSelector((state) => state.category.prodCategories);
     useEffect(() => {
         dispatch(getAllProduct());
+        dispatch(getProdCategory());
     }, [dispatch]);
     return (
         <>
             <Meta title={'B-Shop'} />
-            <section className="home-wrapper-1 py-5">
+            <section className="banner-wrapper home-wrapper-1 py-5">
                 <div className="container-xxl">
                     <div className="row">
-                        <div className="col-12 col-lg-12 col-xl-6 main-banner">
-                            <div className="position-relative main-img-banner">
+                        <div className="col-6 main-banner">
+                            <div className="position-relative">
                                 <img
                                     src="images/main-banner-1.jpg"
-                                    className="img-fluid w-100 rounded-3"
+                                    className="img-fluid w-100 rounded-3 main-img-banner"
                                     alt="main-banner"
                                 />
                                 <div className="main-banner-content position-absolute">
@@ -37,8 +40,8 @@ const Home = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="secondary-banner col-xl-6">
-                            <div className="d-flex flex-wrap gap-10 justify-content-between align-items-center">
+                        <div className="secondary-banner col-6">
+                            <div className="d-flex flex-wrap gap-5 justify-content-between align-items-center">
                                 <div className="small-banner position-relative">
                                     <img
                                         src="images/catbanner-01.jpg"
@@ -67,23 +70,25 @@ const Home = () => {
                                         </p>
                                     </div>
                                 </div>
+                            </div>
+                            <div className="d-flex flex-wrap gap-5 justify-content-between align-items-center mt-3">
                                 <div className="small-banner position-relative">
                                     <img
-                                        src="images/catbanner-03.jpg"
+                                        src="images/catbanner-01.jpg"
                                         className="img-fluid rounded-3"
                                         alt="main-banner"
                                     />
                                     <div className="small-banner-content position-absolute">
-                                        <h4>Hàng Mới Về</h4>
-                                        <h5>Quần Jean </h5>
+                                        <h4>Giảm giá cho sản phẩm</h4>
+                                        <h5>Áo Thun </h5>
                                         <p>
-                                            Chỉ từ 89.000<sup>đ</sup>/cái <br /> 180.000<sup>đ</sup>/cặp
+                                            Chỉ từ 99.000<sup>đ</sup>/cái <br /> 190.000<sup>đ</sup>/cặp
                                         </p>
                                     </div>
                                 </div>
                                 <div className="small-banner position-relative">
                                     <img
-                                        src="images/catbanner-04.jpg"
+                                        src="images/catbanner-02.jpg"
                                         className="img-fluid rounded-3"
                                         alt="main-banner"
                                     />
@@ -100,12 +105,12 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-            <section className="home-wrapper-2 py-5">
+            <section className="services-wrapper home-wrapper-2 py-5">
                 <div className="container">
                     <div className="row">
                         <div className="col-12">
                             <div className="services d-flex align-items-center justify-content-between">
-                                <div className="d-flex align-items-center gap-15">
+                                <div className="d-flex align-items-center gap-10">
                                     <img src="images/service.png" alt="" />
                                     <div>
                                         <h6>Miễn Phí Giao Hàng</h6>
@@ -125,7 +130,7 @@ const Home = () => {
                                     <img src="images/service-03.png" alt="service" />
                                     <div>
                                         <h6>Hỗ trợ 24/7</h6>
-                                        <p className="mb-0">Shopping cùng chuyên gia</p>
+                                        <p className="mb-0">Mọi lúc, mọi nơi</p>
                                     </div>
                                 </div>
                                 <div className="d-flex align-items-center gap-15">
@@ -152,62 +157,21 @@ const Home = () => {
                     <div className="row">
                         <div className="col-12">
                             <div className="categories d-flex justify-content-between flex-wrap align-items-center">
-                                <div className="d-flex align-items-center">
-                                    <div>
-                                        <h6>Áo thun nam</h6>
-                                        <p>10 sản phẩm</p>
-                                    </div>
-                                    <img src="images/camera.jpg" alt="camera" />
-                                </div>
-                                <div className="d-flex align-items-center">
-                                    <div>
-                                        <h6>Áo thun nam</h6>
-                                        <p>10 sản phẩm</p>
-                                    </div>
-                                    <img src="images/camera.jpg" alt="camera" />
-                                </div>
-                                <div className="d-flex align-items-center">
-                                    <div>
-                                        <h6>Áo thun nam</h6>
-                                        <p>10 sản phẩm</p>
-                                    </div>
-                                    <img src="images/camera.jpg" alt="camera" />
-                                </div>
-                                <div className="d-flex align-items-center">
-                                    <div>
-                                        <h6>Áo thun nam</h6>
-                                        <p>10 sản phẩm</p>
-                                    </div>
-                                    <img src="images/camera.jpg" alt="camera" />
-                                </div>
-                                <div className="d-flex align-items-center">
-                                    <div>
-                                        <h6>Áo thun nam</h6>
-                                        <p>10 sản phẩm</p>
-                                    </div>
-                                    <img src="images/camera.jpg" alt="camera" />
-                                </div>
-                                <div className="d-flex align-items-center">
-                                    <div>
-                                        <h6>Áo thun nam</h6>
-                                        <p>10 sản phẩm</p>
-                                    </div>
-                                    <img src="images/camera.jpg" alt="camera" />
-                                </div>
-                                <div className="d-flex align-items-center">
-                                    <div>
-                                        <h6>Áo thun nam</h6>
-                                        <p>10 sản phẩm</p>
-                                    </div>
-                                    <img src="images/camera.jpg" alt="camera" />
-                                </div>
-                                <div className="d-flex align-items-center">
-                                    <div>
-                                        <h6>Áo thun nam</h6>
-                                        <p>10 sản phẩm</p>
-                                    </div>
-                                    <img src="images/camera.jpg" alt="camera" />
-                                </div>
+                                {prodCateState &&
+                                    prodCateState?.map((item, index) => (
+                                        <div key={index} className="d-flex align-items-center gap-5">
+                                            <div>
+                                                <h6>{item.name}</h6>
+                                                <p>{item.productList.length} sản phẩm</p>
+                                            </div>
+                                            <img
+                                                src={item.productList[0]?.images[0]?.url}
+                                                className=" img-fluid"
+                                                alt="img"
+                                                style={{ width: 70, height: 70 }}
+                                            />
+                                        </div>
+                                    ))}
                             </div>
                         </div>
                     </div>

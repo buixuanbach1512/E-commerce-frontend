@@ -116,6 +116,14 @@ export const emptyCart = createAsyncThunk('auth/emptycart', async (thunkAPI) => 
     }
 });
 
+export const applyCoupon = createAsyncThunk('auth/apply-coupon', async (couponData, thunkAPI) => {
+    try {
+        return await authService.applyCoupon(couponData);
+    } catch (e) {
+        return thunkAPI.rejectWithValue(e);
+    }
+});
+
 export const userOrder = createAsyncThunk('auth/order', async (thunkAPI) => {
     try {
         return await authService.userOrder();
@@ -408,6 +416,27 @@ export const authSlice = createSlice({
                 state.isError = true;
                 state.isSuccess = false;
                 state.message = action.error;
+            })
+            .addCase(applyCoupon.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(applyCoupon.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isError = false;
+                state.isSuccess = true;
+                state.totalPriceAfterDiscount = action.payload;
+                if (state.isSuccess === true) {
+                    toast.success('Nhập mã giảm giá thành công');
+                }
+            })
+            .addCase(applyCoupon.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.isSuccess = false;
+                state.message = action.error;
+                if (state.isError === true) {
+                    toast.error(action.payload.response.data.message);
+                }
             })
             .addCase(userOrder.pending, (state) => {
                 state.isLoading = true;

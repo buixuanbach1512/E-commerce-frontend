@@ -3,11 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { addToWishList } from '../features/product/productSlice';
 import { IoIosHeartEmpty } from 'react-icons/io';
-import { BsEye } from 'react-icons/bs';
-import { IoBagOutline } from 'react-icons/io5';
 import { toast } from 'react-toastify';
 import StarRatings from 'react-star-ratings';
-import parse from 'html-react-parser';
 
 const ProductCard = (props) => {
     const { grid, item } = props;
@@ -22,7 +19,12 @@ const ProductCard = (props) => {
         }
     };
     return (
-        <div className={`${location.pathname === '/store' ? `col-${grid}` : 'col-2'}`} style={{ padding: 5 }}>
+        <div
+            className={`${
+                location.pathname === '/store' ? `col-xl-${grid} col-md-${grid} col-6 ` : 'col-xl-2 col-md-4 col-6'
+            }`}
+            style={{ padding: 5 }}
+        >
             <div className="product-card position-relative">
                 <div className="wishlist-icon position-absolute">
                     <button
@@ -39,7 +41,7 @@ const ProductCard = (props) => {
                         <img className="img-fluid" src={item.images[0].url} alt="productimage" />
                     </Link>
                 </div>
-                <div className="product-details">
+                <div className="product-details mt-2">
                     <h6 className="brand">{item.brand.name}</h6>
                     <h5 className="product-title">{item.name}</h5>
                     <div className="mb-2">
@@ -47,27 +49,15 @@ const ProductCard = (props) => {
                             rating={item.totalRating}
                             starRatedColor="#ffd700"
                             numberOfStars={5}
-                            starDimension="20px"
+                            starDimension="18px"
                             starSpacing="1px"
                             name="rating"
                         />
                     </div>
-
-                    <p className={`description ${grid === 12 ? 'd-block' : 'd-none'}`}>{parse(item.description)}</p>
                     <p className="price">
                         {item.price.toLocaleString('vi')}
                         <sup>đ</sup>
                     </p>
-                </div>
-                <div className="action-bar position-absolute">
-                    <div className="d-flex flex-column">
-                        <Link className="mb-3" to={`/product/${item._id}`}>
-                            <BsEye className="prod-icon eye-icon" />
-                        </Link>
-                        <Link>
-                            <IoBagOutline className="prod-icon bag-icon" />
-                        </Link>
-                    </div>
                 </div>
             </div>
         </div>

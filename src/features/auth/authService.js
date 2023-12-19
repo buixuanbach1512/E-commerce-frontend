@@ -107,6 +107,15 @@ const emptyCart = async () => {
     }
 };
 
+const applyCoupon = async (couponData) => {
+    let getToken = JSON.parse(sessionStorage.getItem('customer'))?.token;
+    axios.defaults.headers.common = { Authorization: `Bearer ${getToken}` };
+    const response = await axios.post(`user/cart/applyCoupon`, { coupon: couponData });
+    if (response.data) {
+        return response.data;
+    }
+};
+
 const userOrder = async () => {
     let getToken = JSON.parse(sessionStorage.getItem('customer'))?.token;
     axios.defaults.headers.common = { Authorization: `Bearer ${getToken}` };
@@ -137,6 +146,7 @@ export const authService = {
     updateQuantityCart,
     createOrder,
     emptyCart,
+    applyCoupon,
     userOrder,
     logout,
 };

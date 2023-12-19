@@ -17,6 +17,14 @@ export const getAllCategory = createAsyncThunk('category/get-all-categories', as
     }
 });
 
+export const getProdCategory = createAsyncThunk('category/get-category-product', async (thunkAPI) => {
+    try {
+        return await categoryService.getProdCategory();
+    } catch (e) {
+        return thunkAPI.rejectWithValue(e);
+    }
+});
+
 export const resetState = createAction('Reset-All');
 
 export const categorySlice = createSlice({
@@ -35,6 +43,21 @@ export const categorySlice = createSlice({
                 state.categories = action.payload;
             })
             .addCase(getAllCategory.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
+                state.message = action.error;
+            })
+            .addCase(getProdCategory.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getProdCategory.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.isError = false;
+                state.prodCategories = action.payload;
+            })
+            .addCase(getProdCategory.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = false;
                 state.isError = true;

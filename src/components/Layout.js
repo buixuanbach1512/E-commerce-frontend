@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const Layout = () => {
     return (
         <>
-            <div>
+            <div className="app">
                 <Header />
                 <Outlet />
                 <ToastContainer
